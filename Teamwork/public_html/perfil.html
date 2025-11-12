@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/profile.js" defer></script>
 </head>
 <body>
 
@@ -46,18 +47,18 @@
             <div class="perfil-container">
                 <!-- Imagem do usuário -->
                 <div class="perfil-img">
-                    <img src="images/profile.png" alt="Foto do usuário" height="150">
+                    <img id="profile-img" src="images/profile.png" alt="Foto do usuário" height="150">
                 </div>
 
                 <!-- Informações do usuário -->
                 <div class="perfil-info">
                     <p><strong>E-mail:</strong> email@email.com</p>
-                    <p><strong>Data de nascimento:</strong> 01/01/1990</p>
-                    <p><strong>Data de registo:</strong> 01/01/2025</p>
+                    <p><strong>Data de nascimento:</strong> <span id="birthdate-display">1990-01-01</span></p>
+                    <p><strong>Data de registo:</strong> 2025-01-01</p>
                     <p><strong>Número de coleções:</strong> 5</p>
 
                     <div class="perfil-buttons">
-                        <button class="btn-primary">Editar perfil</button>
+                        <button id="edit-profile-btn" class="btn-primary">Editar perfil</button>
                         <button class="btn-primary">Alterar e-mail</button>
                         <button class="btn-primary">Alterar palavra-passe</button>
                     </div>

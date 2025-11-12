@@ -330,3 +330,111 @@ input {
     margin-bottom: 8px;
     font-size: 16px;
 }
+
+/* ------------------- */
+/* Página Editar Perfil */
+.edit-profile-content {
+    max-width: 1000px;
+    margin: 40px auto 80px auto;
+    padding: 0 20px;
+}
+
+.edit-profile-content h1 {
+    margin-bottom: 60px; /* espaço maior entre título e conteúdo */
+    color: #333;
+}
+
+/* Container principal: imagem à esquerda, formulário à direita */
+.edit-profile-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px; /* distância lateral entre imagem e formulário */
+    flex-wrap: wrap;
+}
+
+/* Imagem do perfil e botão "Carregar nova imagem" */
+.edit-profile-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.edit-profile-img img {
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.edit-profile-img .btn-secondary {
+    background-color: #6c757d; /* cinza */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+
+.edit-profile-img .btn-secondary:hover {
+    background-color: #565e64;
+}
+
+/* Formulário de edição */
+.edit-profile-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.edit-profile-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.edit-profile-form input[type="date"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 60%;
+}
+
+/* Botões "Confirmar" e "Desfazer alterações" lado a lado */
+.edit-profile-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-top: 80px; /* distância do formulário */
+}
+
+.edit-profile-buttons .btn-primary,
+.edit-profile-buttons .btn-secondary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 12px 20px;
+    width: 280px; /* largura igual */
+    /* sem height forçada, sem display:flex interno */
+}
+
+.edit-profile-buttons .btn-primary:hover,
+.edit-profile-buttons .btn-secondary:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
