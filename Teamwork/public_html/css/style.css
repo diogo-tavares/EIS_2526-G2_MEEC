@@ -294,3 +294,39 @@ input {
     width: 200px;
     padding: 10px 15px;
 }
+
+/* ------------------- */
+/* Página Desenvolvedores */
+.devs-content {
+    max-width: 1000px;
+    margin: 40px auto 80px auto;
+    padding: 0 20px;
+}
+
+.devs-content h1 {
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.dev-container {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.dev-img img {
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.dev-info h2 {
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.dev-info p {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
