@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Coleções</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Barra superior -->
+    <header class="top-bar-home">
+        <div class="logo">
+            <a href="homepage.html">
+                <img src="images/logo.png" alt="Logo do Sistema">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar coleções...">
+            <button>🔍</button>
+        </div>
+        <div class="user-icon">
+            <a href="perfil.html">
+                <img src="images/profile.png" alt="Perfil" height="40">
+            </a>
+        </div>
+    </header>
+
+    <!-- Barra de navegação por categorias -->
+    <nav class="category-bar">
+        <a href="#">Cartas</a>
+        <a href="#">Veículos</a>
+        <a href="#">Livros</a>
+        <a href="#">Bonecos Miniatura</a>
+        <a href="#">Militares</a>
+        <a href="#">Eventos</a>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="item-page colecao-page">
+    <section class="item-details">
+        <h2>Item X:</h2>
+
+        <div class="item-info">
+            <p><strong>Coleção:</strong> Nome da coleção</p>
+            <p><strong>Nome:</strong> Nome do item</p>
+            <p><strong>Data em que foi adquirido:</strong> 01/01/2025</p>
+            <p><strong>Importância:</strong> Alta</p>
+            <p><strong>Peso:</strong> 120 g</p>
+            <p><strong>Preço:</strong> 25 €</p>
+            <p><strong>Imagem:</strong> <img src="images/amg_gt3.png" alt="Item" class="item-image"></p>
+        </div>
+    </section>
+
+        <aside class="item-sidebar">
+            <button class="btn-primary" onclick="window.location.href='editar_item.html'">Editar item</button>
+            <button class="btn-primary" onclick="window.location.href='minhas_colecoes.html'">Eliminar item</button>
+        </aside>
+    </main>
+
+
+
+    <!-- Barra inferior -->
+    <footer class="bottom-bar">
+        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+    </footer>
+
+</body>
+</html>
