@@ -29,12 +29,12 @@
 
     <!-- Barra de navegação por categorias -->
     <nav class="category-bar">
-        <a href="#">Cartas</a>
-        <a href="#">Veículos</a>
-        <a href="#">Livros</a>
-        <a href="#">Bonecos Miniatura</a>
-        <a href="#">Militares</a>
-        <a href="#">Eventos</a>
+        <a href="colecoes_por_tipo.html">Cartas</a>
+        <a href="colecoes_por_tipo.html">Veículos</a>
+        <a href="colecoes_por_tipo.html">Livros</a>
+        <a href="colecoes_por_tipo.html">Bonecos Miniatura</a>
+        <a href="colecoes_por_tipo.html">Militares</a>
+        <a href="eventos.html">Eventos</a>
     </nav>
 
     <!-- Conteúdo principal -->
@@ -46,6 +46,16 @@
 
             <label for="event-name"><strong>Nome:</strong></label>
             <input type="text" id="event-name" name="event-name" placeholder="Digite o nome do evento" required>
+            
+            <label for="item-collection"><strong>Coleção:</strong></label>
+            <select id="item-collection" name="item-collection" required>
+                <option value="">Selecione uma coleção</option>
+                <option value="colecao1">Coleção 1</option>
+                <option value="colecao2">Coleção 2</option>
+                <option value="colecao3">Coleção 3</option>
+                <option value="colecao4">Coleção 4</option>
+                <option value="colecao5">Coleção 5</option>
+            </select>
 
             <label for="event-location"><strong>Localização:</strong></label>
             <input type="text" id="event-location" name="event-location" placeholder="Digite a localização do evento" required>

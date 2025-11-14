@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/add_edit_item.js" defer></script>
+    <script src="js/edit_item.js" defer></script>
 </head>
 
 <body>
@@ -30,12 +30,12 @@
 
     <!-- Barra de navegação por categorias -->
     <nav class="category-bar">
-        <a href="#">Cartas</a>
-        <a href="#">Veículos</a>
-        <a href="#">Livros</a>
-        <a href="#">Bonecos Miniatura</a>
-        <a href="#">Militares</a>
-        <a href="#">Eventos</a>
+        <a href="colecoes_por_tipo.html">Cartas</a>
+        <a href="colecoes_por_tipo.html">Veículos</a>
+        <a href="colecoes_por_tipo.html">Livros</a>
+        <a href="colecoes_por_tipo.html">Bonecos Miniatura</a>
+        <a href="colecoes_por_tipo.html">Militares</a>
+        <a href="eventos.html">Eventos</a>
     </nav>
 
     <!-- Conteúdo principal -->
@@ -74,9 +74,16 @@
 
             <label for="item-price"><strong>Preço (€):</strong></label>
             <input type="number" id="item-price" name="item-price" placeholder="Insira o preço em euros" step="0.01" required>
-
-            <label for="item-image"><strong>Imagem:</strong></label>
-            <input type="file" id="item-image" name="item-image" accept="image/*">
+            
+            <div class="edit-item-img">
+                <img src="images/amg_gt3.png" alt="Foto de Item" width="180">
+    
+                <!-- Input escondido -->
+                <input type="file" id="item-upload" accept="image/*" style="display: none;">
+    
+                <!-- Botão que dispara o input -->
+                <button class="btn-secondary" id="upload-btn">Carregar nova imagem</button>
+            </div>
         
             <div class="add-item-buttons">
                 <button type="submit" class="btn-primary">Confirmar</button>
@@ -92,7 +99,6 @@
     <footer class="bottom-bar">
         <a href="desenvolvedores.html">DESENVOLVEDORES</a>
     </footer>
-    
     
 
 </body>

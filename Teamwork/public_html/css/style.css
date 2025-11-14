@@ -463,6 +463,30 @@ body.colecao-page .sidebar .btn-primary {
     align-self: flex-start;
 }
 
+.collection-events {
+    margin-top: 30px;  /* Aumenta o espaçamento para baixo dos itens */
+}
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.event-item {
+    font-size: 18px;
+    color: #0056b3;
+    text-decoration: none;
+    padding: 6px 0;
+    transition: color 0.2s ease;
+}
+
+.event-item:hover {
+    color: #003d80;
+    text-decoration: underline;
+}
+
 /* ------------------- */
 /* Página Adicionar Coleção */
 .add-collection-content {
@@ -686,3 +710,41 @@ body.colecao-page .sidebar .btn-primary {
     transform: scale(1.05);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
+.collection-events h3 {
+    font-size: 1.4em;
+    color: #333;
+}
+
+/* ------------------- */
+/* Página Editar Item - imagem e botão */
+.edit-item-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.edit-item-img img {
+    border-radius: 10px;
+    object-fit: cover;
+    width: 180px;
+    height: auto;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.edit-item-img .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+
+.edit-item-img .btn-secondary:hover {
+    background-color: #565e64;
+}
+
