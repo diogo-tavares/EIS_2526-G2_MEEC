@@ -9,11 +9,14 @@
 /* Barra superior login/registo */
 .top-bar {
     width: 100%;
-    background-color: #222;
-    color: white;
     padding: 25px 70px;
     display: flex;
     align-items: center;
+    
+    background-image: url("../images/backgroundtest.png");
+    background-size: cover;        /* A imagem cobre toda a barra */
+    background-position: center;   /* Centrada */
+    background-repeat: no-repeat;
 }
 
 .logo img {
@@ -125,9 +128,12 @@ input {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #222;
-    color: white;
     padding: 25px 70px;
+    
+    background-image: url("../images/backgroundtest.png");
+    background-size: cover;        /* A imagem cobre toda a barra */
+    background-position: center;   /* Centrada */
+    background-repeat: no-repeat;
 }
 
 .top-bar-home .logo img {
@@ -184,6 +190,12 @@ input {
     color: #333;
     font-weight: bold;
     font-size: 16px;
+}
+.category-bar a.active {
+    background: #222;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
 }
 
 .category-bar a:hover {
@@ -747,116 +759,4 @@ body.colecao-page .sidebar .btn-primary {
 .edit-item-img .btn-secondary:hover {
     background-color: #565e64;
 }
-
-/* ------------------- */
-/* Pop-up de confirmação ao eliminar algo */
-/* Fundo escuro */
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: none; /* começa escondido */
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-/* Caixa do popup */
-.popup-box {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    text-align: center;
-    width: 320px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-/* Espaçamento dos botões */
-.popup-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-/* Estilo para texto em lista de eventos */
-.event-info {
-    display: flex;
-    flex-direction: column;   /* força o texto a ficar em coluna */
-    gap: 4px;                 /* pequeno espaçamento entre linhas */
-    margin-top: 5px;
-}
-
-.event-info p {
-    margin: 0;
-    font-size: 15px;
-}
-
-.event-section-title {
-    margin-top: 60px;
-}
-
-/* Link clicável */
-.event-action {
-    margin-top: 5px;
-    color: #0056b3;
-    cursor: pointer;
-    text-decoration: underline;
-    font-weight: bold;
-}
-
-/* Fundo do modal */
-.modal-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none; /* escondido por padrão */
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-/* Caixa do modal */
-.modal-box {
-    background: white;
-    width: 320px;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: left;
-}
-
-.modal-box h3 {
-    margin-bottom: 15px;
-}
-
-.modal-box label {
-    display: block;
-    margin-top: 10px;
-}
-
-.modal-box select {
-    width: 100%;
-    padding: 6px;
-    margin-top: 5px;
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.btn-secondary {
-    background: #555;
-    color: white;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-}
-
 

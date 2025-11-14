@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/colecao.js" defer></script>
 </head>
 
 <body>
@@ -45,11 +44,11 @@
         <h2>Coleção X:</h2>
 
             <div class="collection-info">
-                <p><strong>Nome: </strong>Nome da coleção</p>
-                <p><strong>Data de criação: </strong>01/01/2025</p>
-                <p><strong>Tipo: </strong>Cartas</p>
-                <p><strong>Número de itens: </strong>10</p>
-                <p><strong>Descrição: </strong>Coleção dedicada às cartas raras de Pokémon da primeira geração.</p>
+                <p><strong>Nome:</strong> Nome da coleção</p>
+                <p><strong>Data de criação:</strong> 01/01/2025</p>
+                <p><strong>Tipo:</strong> Cartas</p>
+                <p><strong>Número de itens:</strong> 10</p>
+                <p><strong>Descrição:</strong> Coleção dedicada às cartas raras de Pokémon da primeira geração.</p>
             </div>
             <!-- Secção para mostrar itens da coleção -->
             <div class="collection-items">
@@ -80,7 +79,7 @@
         <aside class="sidebar">
             <button class="btn-primary" onclick="window.location.href='add_item.html'">Adicionar item à coleção</button>
             <button class="btn-primary" onclick="window.location.href='editar_colecao.html'">Editar coleção</button>
-            <button class="btn-primary" id="delete-item-btn">Eliminar coleção</button>
+            <button class="btn-primary" onclick="window.location.href='minhas_colecoes.html'">Eliminar coleção</button>
         </aside>
     </main>
 
@@ -88,17 +87,6 @@
     <footer class="bottom-bar">
         <a href="desenvolvedores.html">DESENVOLVEDORES</a>
     </footer>
-    
-    <!-- Pop-up -->
-    <div id="confirm-popup" class="popup-overlay">
-        <div class="popup-box">
-            <h3>Tem a certeza que deseja eliminar este item?</h3>
-            <div class="popup-buttons">
-                <button id="confirm-yes" class="btn-secondary">Sim</button>
-                <button id="confirm-no" class="btn-secondary">Não</button>
-            </div>
-        </div>
-    </div>
 
 </body>
 </html>

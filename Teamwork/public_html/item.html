@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/item.js" defer></script>
 </head>
 
 <body>
@@ -44,19 +43,19 @@
         <h2>Item X:</h2>
 
         <div class="item-info">
-            <p><strong>Coleção: </strong>Nome da coleção</p>
-            <p><strong>Nome: </strong>Nome do item</p>
-            <p><strong>Data em que foi adquirido: </strong>01/01/2025</p>
-            <p><strong>Importância: </strong>5</p>
-            <p><strong>Peso (g): </strong>120</p>
-            <p><strong>Preço (€): </strong>25</p>
-            <p><strong>Imagem: </strong> <img src="images/amg_gt3.png" alt="Item" class="item-image"></p>
+            <p><strong>Coleção:</strong> Nome da coleção</p>
+            <p><strong>Nome:</strong> Nome do item</p>
+            <p><strong>Data em que foi adquirido:</strong> 01/01/2025</p>
+            <p><strong>Importância:</strong> Alta</p>
+            <p><strong>Peso:</strong> 120 g</p>
+            <p><strong>Preço:</strong> 25 €</p>
+            <p><strong>Imagem:</strong> <img src="images/amg_gt3.png" alt="Item" class="item-image"></p>
         </div>
     </section>
 
         <aside class="item-sidebar">
             <button class="btn-primary" onclick="window.location.href='editar_item.html'">Editar item</button>
-            <button class="btn-primary" id="delete-item-btn">Eliminar item</button>
+            <button class="btn-primary" onclick="window.location.href='minhas_colecoes.html'">Eliminar item</button>
         </aside>
     </main>
 
@@ -66,18 +65,6 @@
     <footer class="bottom-bar">
         <a href="desenvolvedores.html">DESENVOLVEDORES</a>
     </footer>
-    
-    <!-- Pop-up -->
-    <div id="confirm-popup" class="popup-overlay">
-        <div class="popup-box">
-            <h3>Tem a certeza que deseja eliminar este item?</h3>
-            <div class="popup-buttons">
-                <button id="confirm-yes" class="btn-secondary">Sim</button>
-                <button id="confirm-no" class="btn-secondary">Não</button>
-            </div>
-        </div>
-    </div>
-
 
 </body>
 </html>
