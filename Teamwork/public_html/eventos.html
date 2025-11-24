@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/eventos.js" defer></script>
 </head>
 <body>
 
@@ -40,39 +41,58 @@
     <main class="main-content">
     <!-- Seção de coleções do tipo específico -->
     <section class="latest-collections">
-        <h2>Eventos</h2>
+        <h2>Eventos futuros:</h2>
 
-        <!-- Coleção 1 -->
+        <!-- Evento 1 -->
         <div class="collection">
             <a href="evento.html">1</a>
-            <div class="items">
+            <div class="event-info">
                 <p>Descrição do evento 1</p>
+                <p><strong>O evento realiza-se a 01/01/2026</strong></p>
             </div>
         </div>
 
-        <!-- Coleção 2 -->
+        <!-- Evento 2 -->
         <div class="collection">
             <a href="evento.html">2</a>
-            <div class="items">
+            <div class="event-info">
                 <p>Descrição do evento 2</p>
+                <p><strong>O evento realiza-se a 01/02/2026</strong></p>
             </div>
         </div>
 
-        <!-- Coleção 3 -->
+        <!-- Evento 3 -->
         <div class="collection">
             <a href="evento.html">3</a>
-            <div class="items">
+            <div class="event-info">
                 <p>Descrição do evento 3</p>
+                <p><strong>O evento realiza-se a 21/02/2026</strong></p>
             </div>
         </div>
+        
+        <h2 class="event-section-title">Eventos passados:</h2>
 
-        <!-- Coleção 4 -->
+        <!-- Evento 4 -->
         <div class="collection">
             <a href="evento.html">4</a>
-            <div class="items">
+            <div class="event-info">
                 <p>Descrição do evento 4</p>
+                <p><strong>O evento realizou-se a 21/09/2025</strong></p>
+                <p>Presença: nao</p>
+                <p>Classificação: ---</p>
             </div>
         </div>
+        
+        <!-- Evento 5 -->
+        <div class="collection">
+            <a href="evento.html">5</a>
+            <div class="event-info">
+                <p>Descrição do evento 5</p>
+                <p><strong>O evento realizou-se a 12/11/2025</strong></p>
+                <p class="event-action">Registar presença e classificar evento</p>
+            </div>
+        </div>
+        
     </section>
 
     <!-- Seção lateral direita -->
@@ -85,6 +105,35 @@
     <footer class="bottom-bar">
         <a href="desenvolvedores.html">DESENVOLVEDORES</a>
     </footer>
+    
+    <div id="event-modal" class="modal-bg">
+    <div class="modal-box">
+        <h3>Registar presença e classificação</h3>
+
+        <label><strong>Presença:</strong></label>
+        <select id="presence-select">
+            <option value="">Selecione...</option>
+            <option value="sim">Sim</option>
+            <option value="nao">Não</option>
+        </select>
+
+        <label><strong>Classificação (1-5):</strong></label>
+        <select id="rating-select">
+            <option value="">Selecione...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+        <div class="modal-buttons">
+            <button id="confirm-modal" class="btn-secondary">Confirmar</button>
+            <button id="cancel-modal" class="btn-secondary">Cancelar</button>
+        </div>
+    </div>
+    </div>
+
 
 </body>
 </html>
