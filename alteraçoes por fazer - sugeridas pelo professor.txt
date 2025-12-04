@@ -2,8 +2,6 @@ Rating
 Evento pode ter mais que um coleção 
 Atributo calculado, através do size off, remover o atributo do size
 Diferenciar eventos de forma a perceber que não é o tipo
-Por uma aba de outros para coleções fora das existentes 
-Adicionar os novos tipos quando criamos novas coleções 
-Primeiro e último nome no perfil para identificar 
+Substituir tipos de colecao por tags
 Aviso para ocorrência de um evento nos próximos dias 
 Um alerta na pagina para a ocorrência de evento, se for vários para a página dos eventos ou se for 1 logo para o evento
