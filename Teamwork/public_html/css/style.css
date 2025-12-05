@@ -949,3 +949,10 @@ body.colecao-page .sidebar .btn-primary {
     cursor: pointer;
 }
 
+/* Lista vertical para os 5 campos de tags */
+.tags-grid {
+    display: flex;           
+    flex-direction: column; 
+    gap: 10px;              
+    margin-bottom: 20px;    
+}

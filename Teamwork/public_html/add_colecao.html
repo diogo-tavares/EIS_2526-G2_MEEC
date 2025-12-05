@@ -41,17 +41,15 @@
                 <label for="collection-date"><strong>Data de criação:</strong></label>
                 <input type="date" id="collection-date" name="collection-date" required>
 
-                <label for="collection-type"><strong>Tipo:</strong></label>
-                <select id="collection-type" name="collection-type" required>
-                    <option value="">Selecione uma categoria</option>
-                    <option value="cartas">Cartas</option>
-                    <option value="veiculos">Veículos</option>
-                    <option value="livros">Livros</option>
-                    <option value="bonecos">Bonecos Miniatura</option>
-                    <option value="militares">Militares</option>
-                    <option value="eventos">Eventos</option>
-                </select>
-
+                <label><strong>Tags (Preencha até 5, sem espaços, acentos ou cedilhas):</strong></label>
+                <div class="tags-grid">
+                    <input type="text" id="tag-1" placeholder="Tag 1 (Obrigatório)" required>
+                    <input type="text" id="tag-2" placeholder="Tag 2">
+                    <input type="text" id="tag-3" placeholder="Tag 3">
+                    <input type="text" id="tag-4" placeholder="Tag 4">
+                    <input type="text" id="tag-5" placeholder="Tag 5">
+                </div>
+                
                 <label for="collection-description"><strong>Descrição:</strong></label>
                 <textarea id="collection-description" name="collection-description" placeholder="Descreva brevemente a coleção..." rows="5" required></textarea>
 
