@@ -37,21 +37,23 @@
             <label for="event-name"><strong>Nome:</strong></label>
             <input type="text" id="event-name" name="event-name" placeholder="Digite o nome do evento" required>
             
-            <label for="item-collection"><strong>Coleção:</strong></label>
-            <select id="item-collection" name="item-collection" required>
-                <option value="">Selecione uma coleção</option>
-                <option value="colecao1">Coleção 1</option>
-                <option value="colecao2">Coleção 2</option>
-                <option value="colecao3">Coleção 3</option>
-                <option value="colecao4">Coleção 4</option>
-                <option value="colecao5">Coleção 5</option>
-            </select>
+            <label><strong>Coleções (selecione as que se aplicam):</strong></label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="item-collection" value="colecao1"> Coleção 1</label>
+                <label><input type="checkbox" name="item-collection" value="colecao2"> Coleção 2</label>
+                <label><input type="checkbox" name="item-collection" value="colecao3"> Coleção 3</label>
+                <label><input type="checkbox" name="item-collection" value="colecao4"> Coleção 4</label>
+                <label><input type="checkbox" name="item-collection" value="colecao5"> Coleção 5</label>
+            </div>
 
             <label for="event-location"><strong>Localização:</strong></label>
             <input type="text" id="event-location" name="event-location" placeholder="Digite a localização do evento" required>
 
             <label for="event-date"><strong>Data:</strong></label>
             <input type="date" id="event-date" name="event-date" required>
+            
+            <label for="event-time"><strong>Hora de início:</strong></label>
+            <input type="time" id="event-time" name="event-time" required>
 
             <label for="event-price"><strong>Preço do bilhete (€):</strong></label>
             <input type="number" id="event-price" name="event-price" placeholder="Digite o preço do bilhete" step="0.01" required>
