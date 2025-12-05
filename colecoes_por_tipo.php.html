@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Coleções</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Barra superior -->
+    <header class="top-bar-home">
+        <div class="logo">
+            <a href="homepage.html">
+                <img src="images/logo.png" alt="Logo do Sistema">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar coleções...">
+            <button>🔍</button>
+        </div>
+        <div class="user-icon">
+            <a href="perfil.html">
+                <img src="images/profile.png" alt="Perfil" height="40">
+            </a>
+        </div>
+    </header>
+
+    <!-- Barra de navegação por categorias -->
+   <nav class="category-bar">
+    <a href="colecoes_por_tipo.html?tipo=cartas">Cartas</a>
+    <a href="colecoes_por_tipo.html?tipo=veiculos">Veículos</a>
+    <a href="colecoes_por_tipo.html?tipo=livros">Livros</a>
+    <a href="colecoes_por_tipo.html?tipo=bonecos">Bonecos Miniatura</a>
+    <a href="colecoes_por_tipo.html?tipo=militares">Militares</a>
+    <a href="eventos.html">Eventos</a>
+</nav>
+
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+    <!-- Seção de coleções do tipo específico -->
+    <section class="latest-collections">
+        <h2>Coleção do tipo X</h2>
+
+        <!-- Coleção 1 -->
+        <div class="collection">
+            <a href="colecao.html">1</a>
+            <div class="items">
+                <p>Descrição da coleção 1</p>
+            </div>
+        </div>
+
+        <!-- Coleção 2 -->
+        <div class="collection">
+            <a href="colecao.html">2</a>
+            <div class="items">
+                <p>Descrição da coleção 2</p>
+            </div>
+        </div>
+
+        <!-- Coleção 3 -->
+        <div class="collection">
+            <a href="colecao.html">3</a>
+            <div class="items">
+                <p>Descrição da coleção 3</p>
+            </div>
+        </div>
+
+        <!-- Coleção 4 -->
+        <div class="collection">
+            <a href="colecao.html">4</a>
+            <div class="items">
+                <p>Descrição da coleção 4</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção lateral direita -->
+    <aside class="sidebar">
+        <button class="btn-primary" onclick="window.location.href='add_colecao.html'">Adicionar coleção</button>
+    </aside>
+    </main>
+
+    <!-- Barra inferior -->
+    <footer class="bottom-bar">
+        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+    </footer>
+<script src="js/type_collection.js"></script>
+</body>
+</html>
