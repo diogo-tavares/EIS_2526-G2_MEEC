@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=2">
     <script src="js/profile.js" defer></script>
 </head>
 <body>
@@ -53,6 +53,8 @@
                         <button id="change-email-btn" class="btn-primary"> Alterar e-mail</button>
                         <button id="change-pass-btn" class="btn-primary">Alterar palavra-passe</button>
                     </div>
+                    
+                    <button class="btn-danger" onclick="window.location.href='login.php'">Terminar Sessão</button>
                 </div>
             </div>
         </div>

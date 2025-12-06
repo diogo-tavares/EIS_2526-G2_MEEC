@@ -992,3 +992,21 @@ body.colecao-page .sidebar .btn-primary {
     margin-top: 5px;
     font-size: 13px;
 }
+
+/* Botão de Perigo / Logout */
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px; 
+    width: 100%;   
+    display: block;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

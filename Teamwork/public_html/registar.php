@@ -23,10 +23,16 @@
 
         <form id="register-form">
             <label for="email">E-mail</label>
-            <input type="email" id="email" name="email" placeholder="Digite o seu e-mail" required>
+            <input type="email" id="email" name="email" placeholder="Escreva o seu e-mail" required>
+            
+            <label for="name">Nome</label>
+            <input type="text" id="name" name="name" placeholder="Escreva o primeiro e Último nome" required>
+
+            <label for="birthdate">Data de Nascimento</label>
+            <input type="date" id="birthdate" name="birthdate" required>
 
             <label for="password">Palavra-passe</label>
-            <input type="password" id="password" name="password" placeholder="Digite a sua palavra-passe" required>
+            <input type="password" id="password" name="password" placeholder="Escreva a sua palavra-passe" required>
 
             <label for="confirm-password">Repetir palavra-passe</label>
             <input type="password" id="confirm-password" name="confirm-password" placeholder="Repita a sua palavra-passe" required>
