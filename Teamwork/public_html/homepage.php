@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Coleções</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Barra superior -->
+    <header class="top-bar-home">
+        <div class="logo">
+            <a href="homepage.html">
+                <img src="images/logo.png" alt="Logo do Sistema">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
+            <button>🔍</button>
+        </div>
+        <div class="user-icon">
+            <a href="perfil.html">
+                <img src="images/profile.png" alt="Perfil" height="90">
+            </a>
+        </div>
+    </header>
+
+
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+        <!-- Seção de coleções -->
+        <section class="latest-collections">
+            <h2>Últimas coleções adicionadas/Novidades:</h2>
+
+            <!-- Coleção 1 -->
+            <div class="collection">
+                <a href="colecao.html">Cartas Pokemon</a>
+                <div class="items">
+                    <a href="item.html"><img src="images/pokemon1.jpg" alt="Item 1"></a>
+                    <a href="item.html"><img src="images/pokemon2.png" alt="Item 2"></a>
+                    <a href="item.html"><img src="images/pokemon3.jpg" alt="Item 3"></a>
+                </div>
+            </div>
+
+            <!-- Coleção 2 -->
+            <div class="collection">
+                <a href="colecao.html">Veículos Ferrari</a>
+                <div class="items">
+                    <a href="item.html"><img src="images/458italia.png" alt="Item 4"></a>
+                    <a href="item.html"><img src="images/f40.jpeg" alt="Item 5"></a>
+                    <a href="item.html"><img src="images/f50.png" alt="Item 6"></a>
+                </div>
+            </div>
+
+            <!-- Coleção 3 -->
+            <div class="collection">
+                <a href="colecao.html">Veículos Mercedes-Benz</a>
+                <div class="items">
+                    <a href="item.html"><img src="images/amg_gt-r.png" alt="Item 7"></a>
+                    <a href="item.html"><img src="images/amg_gt3.png" alt="Item 8"></a>
+                    <a href="item.html"><img src="images/amg_f1_w13.jpg" alt="Item 9"></a>
+                </div>
+            </div>
+
+            <!-- Coleção 4 -->
+            <div class="collection">
+                <a href="colecao.html">Cartas Yu-Gi-Oh!</a>
+                <div class="items">
+                    <a href="item.html"><img src="images/1.png" alt="Item 10"></a>
+                    <a href="item.html"><img src="images/2.png" alt="Item 11"></a>
+                    <a href="item.html"><img src="images/3.png" alt="Item 12"></a>
+                </div>
+            </div>
+
+            <!-- Coleção 5 -->
+            <div class="collection">
+                <a href="colecao.html">Veículos BMW</a>
+                <div class="items">
+                    <a href="item.html"><img src="images/m1.jfif" alt="Item 13"></a>
+                    <a href="item.html"><img src="images/m4_gt3.jfif" alt="Item 14"></a>
+                    <a href="item.html"><img src="images/m4_gts.png" alt="Item 15"></a>
+                </div>
+            </div>
+        </section>
+        
+        <aside class="sidebar">
+    <button class="btn-primary" onclick="window.location.href='minhas_colecoes.html'">Minhas coleções</button>
+    <button class="btn-primary" onclick="window.location.href='add_colecao.html'">Adicionar coleção</button>
+    
+    <div class="upcoming-events">
+        <h3>Eventos nos próximos 7 dias</h3>
+
+        <div class="mini-event-card">
+            <h4>Feira de Trocas Pokémon</h4>
+            <p>📅 12 Dez 2025 • 15:00</p>
+            <p>📍 Porto, FEUP</p>
+            <a href="evento.html">Ver detalhes →</a>
+        </div>
+
+        <div class="mini-event-card">
+            <h4>Exposição Clássicos</h4>
+            <p>📅 15 Jan 2026 • 10:00</p>
+            <p>📍 Lisboa, FIL</p>
+            <a href="evento.html">Ver detalhes →</a>
+        </div>
+
+        <button class="btn-secondary" onclick="window.location.href='eventos.html'">Ver todos os eventos</button>
+    </div>
+</aside>
+    </main>
+
+    <!-- Barra inferior -->
+    <footer class="bottom-bar">
+        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+    </footer>
+
+</body>
+</html>
