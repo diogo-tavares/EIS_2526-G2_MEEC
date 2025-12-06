@@ -27,6 +27,10 @@ SET time_zone = "+00:00";
 -- Estrutura da tabela `collections`
 --
 
+CREATE DATABASE IF NOT EXISTS teamwork;
+USE teamwork;
+
+
 CREATE TABLE `collections` (
   `id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
