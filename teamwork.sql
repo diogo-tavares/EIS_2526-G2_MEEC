@@ -1,167 +1,99 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Tempo de geração: 06-Dez-2025 às 18:04
--- Versão do servidor: 10.4.32-MariaDB
--- versão do PHP: 8.2.12
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Banco de dados: `teamwork`
---
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `collections`
---
-
+-- Criação da Base de Dados Se Não Existir
 CREATE DATABASE IF NOT EXISTS teamwork;
 USE teamwork;
 
+-- 1. Tabela de UTILIZADORES
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    birthdate DATE,
+    photo_path VARCHAR(255) DEFAULT 'images/profile.png',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `collections` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- 2. Tabela de COLEÇÕES
+CREATE TABLE collections (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
+-- 3. Tabela de TAGS da Coleção
+-- Permite múltiplas tags por coleção
+CREATE TABLE collection_tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    collection_id INT NOT NULL,
+    tag_name VARCHAR(50) NOT NULL,
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Estrutura da tabela `events`
---
+-- 4. Tabela de ITENS
+CREATE TABLE items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    collection_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    acquisition_date DATE,
+    importance INT CHECK (importance BETWEEN 1 AND 10),
+    price DECIMAL(10, 2),
+    weight DECIMAL(10, 2),
+    image_path VARCHAR(255),
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `events` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- 5. Tabela de EVENTOS
+CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    creator_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    location VARCHAR(255),
+    event_date DATE NOT NULL,
+    start_time TIME,
+    price DECIMAL(10, 2),
+    description TEXT,
+    FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
+-- 6. Tabela de ligação EVENTOS <-> COLEÇÕES
+-- Tabela intermédia para suportar múltiplas coleções num evento
+CREATE TABLE event_collections (
+    event_id INT NOT NULL,
+    collection_id INT NOT NULL,
+    PRIMARY KEY (event_id, collection_id),
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+    FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Estrutura da tabela `items`
---
+-- 7. Tabela de PRESENÇAS E CLASSIFICAÇÕES
+-- Guarda se o user foi ao evento e a classificação (1-5)
+CREATE TABLE event_attendance (
+    user_id INT NOT NULL,
+    event_id INT NOT NULL,
+    is_present BOOLEAN DEFAULT FALSE,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    PRIMARY KEY (user_id, event_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `items` (
-  `id` int(11) NOT NULL,
-  `collection_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- 8. Tabela de DESENVOLVEDORES
+-- Tabela isolada para a página "Sobre"
+CREATE TABLE developers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    faculty VARCHAR(100),
+    course VARCHAR(100),
+    photo_path VARCHAR(255) DEFAULT 'images/profile.png'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Índices para tabelas despejadas
---
-
---
--- Índices para tabela `collections`
---
-ALTER TABLE `collections`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Índices para tabela `events`
---
-ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Índices para tabela `items`
---
-ALTER TABLE `items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `collection_id` (`collection_id`);
-
---
--- Índices para tabela `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT de tabelas despejadas
---
-
---
--- AUTO_INCREMENT de tabela `collections`
---
-ALTER TABLE `collections`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `events`
---
-ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `items`
---
-ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Restrições para despejos de tabelas
---
-
---
--- Limitadores para a tabela `collections`
---
-ALTER TABLE `collections`
-  ADD CONSTRAINT `collections_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Limitadores para a tabela `events`
---
-ALTER TABLE `events`
-  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Limitadores para a tabela `items`
---
-ALTER TABLE `items`
-  ADD CONSTRAINT `items_ibfk_1` FOREIGN KEY (`collection_id`) REFERENCES `collections` (`id`) ON DELETE CASCADE;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- INSERTS OBRIGATÓRIOS (Para os desenvolvedores aparecerem logo)
+INSERT INTO developers (name, email, faculty, course) VALUES 
+('Dev 1', 'dev1@fe.up.pt', 'FEUP', 'MEEC'),
+('Dev 2', 'dev2@fe.up.pt', 'FEUP', 'MEEC'),
+('Dev 3', 'dev3@fe.up.pt', 'FEUP', 'MEEC'),
+('Dev 4', 'dev4@fe.up.pt', 'FEUP', 'MEEC');
