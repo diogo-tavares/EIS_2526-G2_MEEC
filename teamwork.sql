@@ -1,8 +1,13 @@
--- Criação da Base de Dados Se Não Existir
-CREATE DATABASE IF NOT EXISTS teamwork;
+-- Eliminar anterior
+DROP DATABASE IF EXISTS teamwork;
+
+-- Criar base de dados
+CREATE DATABASE teamwork;
 USE teamwork;
 
--- 1. Tabela de UTILIZADORES
+-----------------------------------------------------------------------
+
+-- 1. USERS
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -13,7 +18,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 2. Tabela de COLEÇÕES
+-- 2. COLEÇÕES
 CREATE TABLE collections (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -23,8 +28,7 @@ CREATE TABLE collections (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3. Tabela de TAGS da Coleção
--- Permite múltiplas tags por coleção
+-- 3. TAGS
 CREATE TABLE collection_tags (
     id INT AUTO_INCREMENT PRIMARY KEY,
     collection_id INT NOT NULL,
@@ -32,7 +36,7 @@ CREATE TABLE collection_tags (
     FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4. Tabela de ITENS
+-- 4. ITENS
 CREATE TABLE items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     collection_id INT NOT NULL,
@@ -45,7 +49,7 @@ CREATE TABLE items (
     FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5. Tabela de EVENTOS
+-- 5. EVENTOS
 CREATE TABLE events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     creator_id INT NOT NULL,
@@ -55,11 +59,12 @@ CREATE TABLE events (
     start_time TIME,
     price DECIMAL(10, 2),
     description TEXT,
+    is_present BOOLEAN DEFAULT FALSE,
+    rating INT DEFAULT NULL CHECK (rating BETWEEN 1 AND 5),
     FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6. Tabela de ligação EVENTOS <-> COLEÇÕES
--- Tabela intermédia para suportar múltiplas coleções num evento
+-- 6. Ligação EVENTOS <-> COLEÇÕES
 CREATE TABLE event_collections (
     event_id INT NOT NULL,
     collection_id INT NOT NULL,
@@ -68,20 +73,7 @@ CREATE TABLE event_collections (
     FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 7. Tabela de PRESENÇAS E CLASSIFICAÇÕES
--- Guarda se o user foi ao evento e a classificação (1-5)
-CREATE TABLE event_attendance (
-    user_id INT NOT NULL,
-    event_id INT NOT NULL,
-    is_present BOOLEAN DEFAULT FALSE,
-    rating INT CHECK (rating BETWEEN 1 AND 5),
-    PRIMARY KEY (user_id, event_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- 8. Tabela de DESENVOLVEDORES
--- Tabela isolada para a página "Sobre"
+-- 7. DESENVOLVEDORES
 CREATE TABLE developers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -91,9 +83,30 @@ CREATE TABLE developers (
     photo_path VARCHAR(255) DEFAULT 'images/profile.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- INSERTS OBRIGATÓRIOS (Para os desenvolvedores aparecerem logo)
+-----------------------------------------------------------------------
+
+-- Trigger para eliminar eventos sem coleção (após eliminar uma coleção) 
+DELIMITER $$
+CREATE TRIGGER before_collection_delete
+BEFORE DELETE ON collections
+FOR EACH ROW
+BEGIN
+    DELETE e FROM events e
+    JOIN event_collections ec ON e.id = ec.event_id
+    WHERE ec.collection_id = OLD.id
+    AND (
+        SELECT COUNT(*) 
+        FROM event_collections 
+        WHERE event_id = e.id
+    ) = 1;
+END$$
+DELIMITER ;
+
+-----------------------------------------------------------------------
+
+-- Inserts iniciais
 INSERT INTO developers (name, email, faculty, course) VALUES 
-('Dev 1', 'dev1@fe.up.pt', 'FEUP', 'MEEC'),
-('Dev 2', 'dev2@fe.up.pt', 'FEUP', 'MEEC'),
-('Dev 3', 'dev3@fe.up.pt', 'FEUP', 'MEEC'),
-('Dev 4', 'dev4@fe.up.pt', 'FEUP', 'MEEC');
+('Diogo Tavares', 'up201706336@up.pt', 'FEUP', 'MEEC'),
+('Francisco Figueiredo', 'up202007021@up.pt', 'FEUP', 'MEEC'),
+('Vasco Perdigão', 'up202107756@up.pt', 'FEUP', 'MEEC'),
+('David Soares', 'up202107146@up.pt', 'FEUP', 'MEEC');
