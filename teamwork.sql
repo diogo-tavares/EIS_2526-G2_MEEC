@@ -5,7 +5,7 @@ DROP DATABASE IF EXISTS teamwork;
 CREATE DATABASE teamwork;
 USE teamwork;
 
------------------------------------------------------------------------
+-- ---------------------------------------------------------------------
 
 -- 1. USERS
 CREATE TABLE users (
@@ -83,7 +83,7 @@ CREATE TABLE developers (
     photo_path VARCHAR(255) DEFAULT 'images/profile.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-----------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------
 
 -- Trigger para eliminar eventos sem coleção (após eliminar uma coleção) 
 DELIMITER $$
@@ -102,7 +102,7 @@ BEGIN
 END$$
 DELIMITER ;
 
-----------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------
 
 -- DESENVOLVEDORES ----------------------------------------------------
 INSERT INTO developers (name, email, faculty, course) VALUES 
@@ -161,7 +161,7 @@ INSERT INTO items (collection_id, name, acquisition_date, importance, price, wei
 INSERT INTO items (collection_id, name, acquisition_date, importance, price, weight, image_path) VALUES 
 (@col_bmw, 'BMW M1 Procar', '2019-12-25', 10, 500.00, 1300.00, 'images/items/m1.jfif'),
 (@col_bmw, 'BMW M4 GT3', '2023-02-28', 9, 200.00, 1250.00, 'images/items/m4_gt3.jfif'),
-(@col_bmw, 'BMW M4 GTS', '2020-07-14', 8, 120.00, 1510.00, 'images/items/m4_gts.png');
+(@col_bmw, 'BMW M4 GTS', '2020-07-14', 8, 120.00, 1510.00, 'images/items/m4_gts.png'),
 (@col_bmw, 'BMW M2 CS', '2023-06-15', 9, 110.00, 1550.00, 'images/items/m2-cs.jpg'),
 (@col_bmw, 'BMW M3 E30', '2018-09-20', 10, 300.00, 1200.00, 'images/items/m3-e30.jpg'),
 (@col_bmw, 'BMW M3 F80', '2021-04-10', 8, 85.00, 1595.00, 'images/items/m3-f80.jpeg'),
