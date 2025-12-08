@@ -41,7 +41,7 @@
                 <label for="collection-date"><strong>Data de criação:</strong></label>
                 <input type="date" id="collection-date" name="collection-date" required>
 
-                <label><strong>Tags (Preencha até 5, sem espaços, acentos ou cedilhas):</strong></label>
+                <label><strong>Tags (Preencha até 5, em minúsculas, sem espaços, acentos ou cedilhas):</strong></label>
                 <div class="tags-grid">
                     <input type="text" id="tag-1" placeholder="Tag 1 (Obrigatório)" required>
                     <input type="text" id="tag-2" placeholder="Tag 2">
