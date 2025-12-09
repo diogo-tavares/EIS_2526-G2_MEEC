@@ -1,1 +1,1 @@
-	Página inicial do site é "login.html"
+	Página inicial do site é "login.php"
