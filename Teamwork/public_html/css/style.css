@@ -1010,3 +1010,65 @@ body.colecao-page .sidebar .btn-primary {
 .btn-danger:hover {
     background-color: #c82333;
 }
+
+
+/* --- Live Search --- */
+/* IMPORTANTE: Adiciona isto à tua classe .search-bar existente */
+.top-bar-home .search-bar {
+    position: relative; /* Necessário para a lista absoluta funcionar */
+}
+
+/* A caixa flutuante */
+.search-results-list {
+    position: absolute;
+    top: 100%;       /* Cola logo abaixo da barra */
+    left: 0;
+    width: 100%;     /* Mesma largura do input */
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1000;   /* Garante que fica por cima de tudo */
+    display: none;   /* Escondido por defeito */
+    text-align: left;
+    max-height: 300px; /* Limite de altura */
+    overflow-y: auto;  /* Scroll se houver muitos resultados */
+}
+
+/* Cada linha de resultado */
+.search-result-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    display: flex;       /* Para alinhar etiqueta e texto */
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+/* Pequena etiqueta */
+.search-tag {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-right: 10px;
+    min-width: 70px;
+    text-align: center;
+}
+
+/* Cores das etiquetas */
+.tag-evento   { background-color: #e3f2fd; color: #007bff; } /* Azul */
+.tag-colecao  { background-color: #fff3cd; color: #856404; } /* Amarelo */
+.tag-item     { background-color: #d4edda; color: #155724; } /* Verde */

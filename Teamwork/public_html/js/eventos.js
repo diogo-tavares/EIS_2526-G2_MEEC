@@ -4,25 +4,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalCancel = document.getElementById("cancel-modal");
     const presenceSelect = document.getElementById("presence-select");
     const ratingSelect = document.getElementById("rating-select");
+    const hiddenIdInput = document.getElementById("modal-event-id"); // O tal input escondido
 
-    let currentActionP = null; // guarda qual <p> foi clicado
-
-    // Abrir modal ao clicar no texto (seja o link azul .event-action OU o texto já classificado .event-meta-info)
+    // 1. ABRIR MODAL
+    // Adiciona o evento de clique a todos os links "Registar presença..."
     document.querySelectorAll(".event-action, .event-meta-info").forEach(p => {
         p.addEventListener("click", () => {
-            currentActionP = p;
+            // Ler o ID que pusemos no HTML PHP (data-id)
+            const eventId = p.getAttribute("data-id");
+            
+            // Guardar esse ID no input escondido do modal
+            hiddenIdInput.value = eventId;
+            
+            // Mostrar o modal
             modal.style.display = "flex";
             
-            // Reset campos do modal (para permitir refazer a classificação de raiz)
+            // Resetar campos
             presenceSelect.value = "";
             ratingSelect.value = "";
             ratingSelect.disabled = true; 
         });
     });
 
-    // Habilitar/desabilitar classificação com base na presença
+    // 2. Lógica visual (Habilitar estrelas só se for "Sim")
     presenceSelect.addEventListener("change", () => {
-        if (presenceSelect.value === "sim") {
+        if (presenceSelect.value === "1") { // Nota: "1" é o valor que definimos no HTML do eventos.php
             ratingSelect.disabled = false;
         } else {
             ratingSelect.disabled = true;
@@ -30,47 +36,48 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Confirmar
+    // 3. CONFIRMAR E GRAVAR (A parte nova)
     modalConfirm.addEventListener("click", () => {
         const presence = presenceSelect.value;
-        const rating = ratingSelect.value; 
+        const rating = ratingSelect.value;
+        const eventId = hiddenIdInput.value;
 
-        // Validações
-        if (!presence) {
+        if (presence === "") {
             alert("Por favor, selecione a presença!");
             return;
         }
-
-        if (presence === "sim" && !rating) {
+        if (presence === "1" && rating === "") {
             alert("Por favor, selecione a classificação!");
             return;
         }
 
-        // Lógica de Exibição
-        let ratingDisplay;
-
-        if (presence === "nao") {
-            ratingDisplay = "---";
-        } else {
-            // Converte número em estrelas
-            ratingDisplay = "⭐".repeat(parseInt(rating));
-        }
-
-        const presenceFormatted = presence.charAt(0).toUpperCase() + presence.slice(1);
-
-        // 1. Remove a classe antiga (caso seja a primeira vez a clicar)
-        currentActionP.classList.remove("event-action"); 
-        
-        // 2. Garante que tem a classe de metadados
-        currentActionP.classList.add("event-meta-info");
-
-        // 3. Atualiza o HTML
-        currentActionP.innerHTML = `<strong>Presença:</strong> ${presenceFormatted} | <strong>Classificação:</strong> ${ratingDisplay}`;
-
-        modal.style.display = "none"; 
+        // Enviar para o PHP via AJAX (Fetch)
+        fetch('php/update_rating.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                event_id: eventId,
+                presence: presence,
+                rating: rating
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.sucesso) {
+                // Se gravou com sucesso, recarregamos a página
+                // Ao recarregar, o PHP do eventos.php vai ler os dados novos da BD e mostrar atualizado!
+                window.location.reload();
+            } else {
+                alert("Erro ao gravar: " + (data.erro || "Erro desconhecido"));
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert("Erro de comunicação com o servidor.");
+        });
     });
 
-    // Cancelar
+    // 4. CANCELAR
     modalCancel.addEventListener("click", () => {
         modal.style.display = "none";
     });
