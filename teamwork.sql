@@ -187,7 +187,7 @@ INSERT INTO items (collection_id, name, acquisition_date, importance, price, wei
 -- Futuros
 INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating) 
 VALUES 
-(@user_id, 'Salão Automóvel 2026', 'FIL, Lisboa', '2026-03-10', '10:00:00', 25.00, 'Para expor coleções diversas marcas.', NULL, NULL);
+(@user_id, 'Salão Automóvel 2026', 'FIL, Lisboa', '2026-03-10', '10:00:00', 25.00, 'Para expor coleções de diversas marcas.', NULL, NULL);
 SET @evt_auto = LAST_INSERT_ID();
 INSERT INTO event_collections (event_id, collection_id) VALUES (@evt_auto, @col_ferrari), (@evt_auto, @col_bmw), (@evt_auto, @col_mercedes);
 
