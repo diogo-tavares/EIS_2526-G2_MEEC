@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Coleções</title>
+    <link rel="stylesheet" href="css/style.css?v=2">
+    <script src="js/profile.js" defer></script>
+</head>
+<body>
+
+    <!-- Barra superior -->
+    <header class="top-bar-home">
+        <div class="logo">
+            <a href="homepage.html">
+                <img src="images/logo.png" alt="Logo do Sistema">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
+            <button>🔍</button>
+        </div>
+        <div class="user-icon">
+            <a href="perfil.html">
+                <img src="images/profile.png" alt="Perfil" height="90">
+            </a>
+        </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main class="perfil-content">
+        <!-- Título do perfil -->
+        <h1>Perfil:</h1>
+
+        <!-- Container da imagem + informações -->
+        <div class="main-content">
+            <div class="perfil-container">
+                <!-- Imagem do usuário -->
+                <div class="perfil-img">
+                    <img id="profile-img" src="images/profile.png" alt="Foto do usuário" height="150">
+                </div>
+
+                <!-- Informações do usuário -->
+                <div class="perfil-info">
+                    <p><strong>Nome: </strong>Primeiro Ultimo</p>
+                    <p><strong>E-mail: </strong><span id="email-display">email@email.com</span></p>
+                    <p><strong>Data de nascimento: </strong><span id="birthdate-display">01/01/1990</span></p>
+                    <p><strong>Data de registo: </strong>01/01/2025</p>
+                    <p><strong>Número de coleções: </strong>5</p>
+
+                    <div class="perfil-buttons">
+                        <button id="edit-profile-btn" class="btn-primary">Editar perfil</button>
+                        <button id="change-email-btn" class="btn-primary"> Alterar e-mail</button>
+                        <button id="change-pass-btn" class="btn-primary">Alterar palavra-passe</button>
+                    </div>
+                    
+                    <button class="btn-danger" onclick="window.location.href='login.php'">Terminar Sessão</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Barra inferior -->
+    <footer class="bottom-bar">
+        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+    </footer>
+
+</body>
+</html>

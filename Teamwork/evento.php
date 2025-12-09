@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub de Coleções</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/evento.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Barra superior -->
+    <header class="top-bar-home">
+        <div class="logo">
+            <a href="homepage.html">
+                <img src="images/logo.png" alt="Logo do Sistema">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
+            <button>🔍</button>
+        </div>
+        <div class="user-icon">
+            <a href="perfil.html">
+                <img src="images/profile.png" alt="Perfil" height="90">
+            </a>
+        </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+    <!-- Secção de detalhes do evento -->
+    <section class="collection-details">
+        <h2>Evento</h2>
+
+        <div class="collection-info">
+            <p><strong>Nome: </strong>Nome do evento</p>
+            <p><strong>Coleção: </strong>Cartas Pokemon, Cartas Yu-Gi-Oh!</p>
+            <p><strong>Localização: </strong>Local do evento</p>
+            <p><strong>Data: </strong>01/01/2025</p>
+            <p><strong>Hora de início: </strong>10:00</p>
+            <p><strong>Preço do bilhete: </strong>50 €</p>
+            <p><strong>Descrição: </strong>Descrição breve do evento, atrações e detalhes importantes.</p>
+        </div>
+    </section>
+
+    <!-- Seção lateral direita (botões de ação) -->
+    <aside class="sidebar">
+        <button class="btn-primary" onclick="window.location.href='editar_evento.html'">Editar evento</button>
+        <button class="btn-primary" id="delete-item-btn">Eliminar evento</button>
+    </aside>
+    </main>
+
+
+
+
+    <!-- Barra inferior -->
+    <footer class="bottom-bar">
+        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+    </footer>
+    
+    <!-- Pop-up -->
+    <div id="confirm-popup" class="popup-overlay">
+        <div class="popup-box">
+            <h3>Tem a certeza que deseja eliminar este item?</h3>
+            <div class="popup-buttons">
+                <button id="confirm-yes" class="btn-secondary">Sim</button>
+                <button id="confirm-no" class="btn-secondary">Não</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
