@@ -25,6 +25,7 @@ CREATE TABLE collections (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_public BOOLEAN DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -61,6 +62,7 @@ CREATE TABLE events (
     description TEXT,
     is_present BOOLEAN DEFAULT NULL,
     rating INT DEFAULT NULL CHECK (rating BETWEEN 1 AND 5),
+    is_public BOOLEAN DEFAULT 0,
     FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -85,25 +87,6 @@ CREATE TABLE developers (
 
 -- --------------------------------------------------------------------------------------------
 
--- Trigger para eliminar eventos sem coleção (após eliminar uma coleção) 
-DELIMITER $$
-CREATE TRIGGER before_collection_delete
-BEFORE DELETE ON collections
-FOR EACH ROW
-BEGIN
-    DELETE e FROM events e
-    JOIN event_collections ec ON e.id = ec.event_id
-    WHERE ec.collection_id = OLD.id
-    AND (
-        SELECT COUNT(*) 
-        FROM event_collections 
-        WHERE event_id = e.id
-    ) = 1;
-END$$
-DELIMITER ;
-
--- --------------------------------------------------------------------------------------------
-
 -- DESENVOLVEDORES ----------------------------------------------------
 INSERT INTO developers (name, email, faculty, course) VALUES 
 ('Diogo Tavares', 'up201706336@up.pt', 'FEUP', 'MEEC'),
@@ -120,29 +103,37 @@ VALUES
 
 SET @user_id = LAST_INSERT_ID();
 
+
+INSERT INTO users (email, password, name, birthdate, photo_path) 
+VALUES 
+('admin2@gmail.com', 'a', 'Administrador2', '2000-01-01', 'images/users/admin.png');
+
+
+SET @user_id2 = LAST_INSERT_ID();
+
 -- COLEÇÕES -----------------------------------------------------------
-INSERT INTO collections (user_id, title, description, created_date) VALUES 
-(@user_id, 'Ferraris de Elite', 'Os cavalos rampantes mais icónicos da história.', NOW());
+INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES 
+(@user_id, 'Ferraris de Elite', 'Os cavalos rampantes mais icónicos da história.', NOW(), 1);
 SET @col_ferrari = LAST_INSERT_ID();
 INSERT INTO collection_tags (collection_id, tag_name) VALUES (@col_ferrari, 'supercarro'), (@col_ferrari, 'italiano'), (@col_ferrari, 'carros');
 
-INSERT INTO collections (user_id, title, description, created_date) VALUES 
-(@user_id, 'Carros Mercedes-Benz AMG', 'Performance alemã e flechas de prata.', NOW());
+INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES 
+(@user_id, 'Carros Mercedes-Benz AMG', 'Performance alemã e flechas de prata.', NOW(), 1);
 SET @col_mercedes = LAST_INSERT_ID();
 INSERT INTO collection_tags (collection_id, tag_name) VALUES (@col_mercedes, 'amg'), (@col_mercedes, 'f1'), (@col_mercedes, 'carros');
 
-INSERT INTO collections (user_id, title, description, created_date) VALUES 
-(@user_id, 'Carros BMW M Power', 'O derradeiro prazer de condução.', NOW());
+INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES 
+(@user_id, 'Carros BMW M Power', 'O derradeiro prazer de condução.', NOW(), 1);
 SET @col_bmw = LAST_INSERT_ID();
 INSERT INTO collection_tags (collection_id, tag_name) VALUES (@col_bmw, 'm-performance'), (@col_bmw, 'alemao'), (@col_bmw, 'carros');
 
-INSERT INTO collections (user_id, title, description, created_date) VALUES 
-(@user_id, 'Cartas Pokémon', 'Cartas holográficas e primeiras edições.', NOW());
+INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES 
+(@user_id, 'Cartas Pokémon', 'Cartas holográficas e primeiras edições.', NOW(), 1);
 SET @col_pokemon = LAST_INSERT_ID();
 INSERT INTO collection_tags (collection_id, tag_name) VALUES (@col_pokemon, 'cartas'), (@col_pokemon, 'nintendo');
 
-INSERT INTO collections (user_id, title, description, created_date) VALUES 
-(@user_id, 'Cartas Yu-Gi-Oh!', 'É hora do duelo! As minhas cartas de armadilha e monstros.', NOW());
+INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES 
+(@user_id, 'Cartas Yu-Gi-Oh!', 'É hora do duelo! As minhas cartas de armadilha e monstros.', NOW(), 0);
 SET @col_yugioh = LAST_INSERT_ID();
 INSERT INTO collection_tags (collection_id, tag_name) VALUES (@col_yugioh, 'anime'), (@col_yugioh, 'konami'), (@col_yugioh, 'cartas');
 
@@ -185,21 +176,21 @@ INSERT INTO items (collection_id, name, acquisition_date, importance, price, wei
 
 -- EVENTOS ------------------------------------------------------------
 -- Futuros
-INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating) 
+INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating, is_public) 
 VALUES 
-(@user_id, 'Salão Automóvel 2026', 'FIL, Lisboa', '2026-03-10', '10:00:00', 25.00, 'Para expor coleções de diversas marcas.', NULL, NULL);
+(@user_id, 'Salão Automóvel 2026', 'FIL, Lisboa', '2026-03-10', '10:00:00', 25.00, 'Para expor coleções de diversas marcas.', NULL, NULL, 1);
 SET @evt_auto = LAST_INSERT_ID();
 INSERT INTO event_collections (event_id, collection_id) VALUES (@evt_auto, @col_ferrari), (@evt_auto, @col_bmw), (@evt_auto, @col_mercedes);
 
 -- Passados
-INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating) 
+INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating, is_public) 
 VALUES 
-(@user_id, 'Torneio Nacional Cartas Colecionáveis', 'Porto', '2025-09-20', '14:30:00', 5.00, 'Para mostrar o meu deck de Yu-Gi-Oh e trocar algumas cartas Pokémon.', 1, 4);
+(@user_id, 'Torneio Nacional Cartas Colecionáveis', 'Porto', '2025-09-20', '14:30:00', 5.00, 'Para mostrar o meu deck de Yu-Gi-Oh e trocar algumas cartas Pokémon.', 1, 4, 1);
 SET @evt_tcg = LAST_INSERT_ID();
 INSERT INTO event_collections (event_id, collection_id) VALUES (@evt_tcg, @col_yugioh), (@evt_tcg, @col_pokemon);
 
-INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating) 
+INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_present, rating, is_public) 
 VALUES 
-(@user_id, 'Encontro de Clássicos Mercedes-Benz', 'Estoril Garden', '2025-11-15', '09:00:00', 0.00, 'Um encontro fantástico para entusiastas da marca Mercedes-Benz.', NULL, NULL);
+(@user_id, 'Encontro de Clássicos Mercedes-Benz', 'Estoril Garden', '2025-11-15', '09:00:00', 0.00, 'Um encontro fantástico para entusiastas da marca Mercedes-Benz.', NULL, NULL, 1);
 SET @evt_mercedes = LAST_INSERT_ID();
 INSERT INTO event_collections (event_id, collection_id) VALUES (@evt_mercedes, @col_mercedes);
