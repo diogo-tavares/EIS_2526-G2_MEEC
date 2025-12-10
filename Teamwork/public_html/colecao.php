@@ -1,7 +1,5 @@
 <?php
-session_start();
-require_once 'php/db.php';
-require_once 'php/auth.php';
+require_once __DIR__ . "/php/db.php";
 
 // Validar ID da coleção
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -44,7 +42,6 @@ $total_itens = $itens->num_rows;
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($colecao['title']) ?></title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -57,9 +54,9 @@ $total_itens = $itens->num_rows;
     </div>
 
     <div class="search-bar">
-            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
-            <div id="search-results" class="search-results-list"></div>
-        </div>
+        <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
+        <button>🔍</button>
+    </div>
 
     <div class="user-icon">
         <a href="perfil.php">
@@ -109,7 +106,7 @@ $total_itens = $itens->num_rows;
         </button>
 
         <button class="btn-primary"
-                onclick="window.location.href='apagar_colecao.php?id=<?= $id ?>'">
+                onclick="window.location.href='php/delete_collection.php?id=<?= $id ?>'">
             Eliminar coleção
         </button>
     </aside>
