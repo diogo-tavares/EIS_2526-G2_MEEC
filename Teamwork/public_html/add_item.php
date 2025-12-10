@@ -1,96 +1,142 @@
+<?php
+session_start();
+require_once 'php/db.php';
+require_once 'php/auth.php';
+
+// Se vier diretamente de uma coleção
+$preSelected = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Buscar todas as coleções
+$collections = $conn->query("SELECT id, title FROM collections");
+
+// Se o formulário for submetido
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $collection_id = intval($_POST['collection_id']);
+    $name = $_POST['name'];
+    $date = $_POST['date'];
+    $importance = intval($_POST['importance']);
+    $weight = floatval($_POST['weight']);
+    $price = floatval($_POST['price']);
+
+    // Upload da imagem
+    $image_path = null;
+
+    if (!empty($_FILES["image"]["name"])) {
+
+        $target_dir = "images/items/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $image_path = $target_dir . time() . "_" . basename($_FILES["image"]["name"]);
+        move_uploaded_file($_FILES["image"]["tmp_name"], $image_path);
+    }
+
+    // Inserir com prepared statement
+    $stmt = $conn->prepare("
+        INSERT INTO items 
+        (collection_id, name, acquisition_date, importance, weight, price, image_path)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt->bind_param(
+        "issidds",
+        $collection_id,
+        $name,
+        $date,
+        $importance,
+        $weight,
+        $price,
+        $image_path
+    );
+
+    $stmt->execute();
+
+    // Voltar para a coleção
+    header("Location: colecao.php?id=$collection_id");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub de Coleções</title>
+    <title>Adicionar Item</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/add_item.js" defer></script>
 </head>
 
 <body>
 
-    <!-- Barra superior -->
-    <header class="top-bar-home">
-        <div class="logo">
-            <a href="homepage.html">
-                <img src="images/logo.png" alt="Logo do Sistema">
-            </a>
-        </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
-            <button>🔍</button>
-        </div>
-        <div class="user-icon">
-            <a href="perfil.html">
-                <img src="images/profile.png" alt="Perfil" height="90">
-            </a>
-        </div>
-    </header>
+<header class="top-bar-home">
+    <div class="logo">
+        <a href="homepage.php">
+            <img src="images/logo.png" alt="Logo do Sistema">
+        </a>
+    </div>
 
-    <!-- Conteúdo principal -->
-    <main class="add-item-content">
-    <h1>Adicionar item:</h1>
+    <div class="search-bar">
+        <input type="text" placeholder="Pesquisar">
+        <button>🔍</button>
+    </div>
 
-    <section class="add-item-container">
-        <form id="add-item-form" class="add-item-form">
+    <div class="user-icon">
+        <a href="perfil.php">
+            <img src="images/profile.png" height="90">
+        </a>
+    </div>
+</header>
 
-            <label for="item-collection"><strong>Coleção:</strong></label>
-            <select id="item-collection" name="item-collection" required>
-                <option value="">Selecione uma coleção</option>
-                <option value="colecao1">Coleção 1</option>
-                <option value="colecao2">Coleção 2</option>
-                <option value="colecao3">Coleção 3</option>
-                <option value="colecao4">Coleção 4</option>
-                <option value="colecao5">Coleção 5</option>
-            </select>
+<main class="add-item-content">
+<h1>Adicionar item:</h1>
 
-            <label for="item-name"><strong>Nome:</strong></label>
-            <input type="text" id="item-name" name="item-name" placeholder="Digite o nome do item" required>
+<section class="add-item-container">
 
-            <label for="item-date"><strong>Data em que foi adquirido:</strong></label>
-            <input type="date" id="item-date" name="item-date" required>
+<form method="POST" enctype="multipart/form-data" class="add-item-form">
 
-            <label for="item-importance"><strong>Importância (1 a 10):</strong></label>
-            <input type="number" id="item-importance" name="item-importance" min="1" max="10" placeholder="Digite um valor de 1 a 10" required>
+    <label><strong>Coleção:</strong></label>
+    <select name="collection_id" required>
+        <option value="">Selecione uma coleção</option>
+        <?php while ($c = $collections->fetch_assoc()): ?>
+            <option value="<?= $c['id'] ?>"
+                <?= ($c['id'] == $preSelected) ? 'selected' : '' ?>>
+                <?= htmlspecialchars($c['title']) ?>
+            </option>
+        <?php endwhile; ?>
+    </select>
 
-            <label for="item-weight"><strong>Peso (g):</strong></label>
-            <input type="number" id="item-weight" name="item-weight" placeholder="Insira o peso em gramas" required>
+    <label><strong>Nome:</strong></label>
+    <input type="text" name="name" required>
 
-            <label for="item-price"><strong>Preço (€):</strong></label>
-            <input type="number" id="item-price" name="item-price" placeholder="Insira o preço em euros" step="0.01" required>
+    <label><strong>Data de aquisição:</strong></label>
+    <input type="date" name="date" required>
 
-            <div class="edit-item-img">
-                <!-- Área onde a imagem será colocada dinamicamente -->
-                <img id="preview-item-img" src="" alt="Pré-visualização" class="hidden-element" width="180">
+    <label><strong>Importância (1–10):</strong></label>
+    <input type="number" name="importance" min="1" max="10" required>
 
-                <!-- Input escondido -->
-                <input type="file" id="item-upload" accept="image/*" class="hidden-element">
+    <label><strong>Peso (g):</strong></label>
+    <input type="number" name="weight" required>
 
-                <!-- Botão que dispara o input -->
-                <button class="btn-secondary" id="upload-btn">Carregar nova imagem</button>
-            </div>
+    <label><strong>Preço (€):</strong></label>
+    <input type="number" name="price" step="0.01" required>
 
-            
-            
-            
-        
-            <div class="add-item-buttons">
-                <button type="submit" class="btn-primary">Confirmar</button>
-                <button type="button" id="cancel-btn" class="btn-primary">Desfazer alterações e voltar atrás</button>
-            </div>
-        </form>
-    </section>
+    <label><strong>Imagem:</strong></label>
+    <input type="file" name="image" accept="image/*">
+
+    <div class="add-item-buttons">
+        <button type="submit" class="btn-primary">Confirmar</button>
+        <button type="button" class="btn-primary"
+            onclick="window.history.back()">Cancelar</button>
+    </div>
+
+</form>
+</section>
 </main>
 
-
-
-    <!-- Barra inferior -->
-    <footer class="bottom-bar">
-        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
-    </footer>
-    
-    
+<footer class="bottom-bar">
+    <a href="desenvolvedores.php">DESENVOLVEDORES</a>
+</footer>
 
 </body>
 </html>

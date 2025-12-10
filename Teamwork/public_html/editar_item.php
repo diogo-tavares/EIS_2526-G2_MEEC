@@ -1,91 +1,169 @@
+<?php
+session_start();
+require_once 'php/db.php';
+require_once 'php/auth.php';
+
+// Validar ID
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if ($id <= 0) {
+    die("ID inválido.");
+}
+
+// Buscar item
+$stmt = $conn->prepare("SELECT * FROM items WHERE id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$item = $stmt->get_result()->fetch_assoc();
+
+if (!$item) {
+    die("Item não encontrado.");
+}
+
+// Buscar coleções
+$collections = $conn->query("SELECT id, title FROM collections");
+
+// Se o formulário for submetido
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $collection_id = intval($_POST['collection_id']);
+    $name = $_POST['name'];
+    $date = $_POST['date'];
+    $importance = intval($_POST['importance']);
+    $weight = floatval($_POST['weight']);
+    $price = floatval($_POST['price']);
+
+    // Manter imagem antiga por defeito
+    $image_path = $item['image_path'];
+
+    // Se for enviada nova imagem
+    if (!empty($_FILES["image"]["name"])) {
+
+        $target_dir = "images/items/";
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
+        $image_path = $target_dir . time() . "_" . basename($_FILES["image"]["name"]);
+        move_uploaded_file($_FILES["image"]["tmp_name"], $image_path);
+    }
+
+    // Update com prepared statement
+    $stmtUpdate = $conn->prepare("
+        UPDATE items SET
+            collection_id = ?,
+            name = ?,
+            acquisition_date = ?,
+            importance = ?,
+            weight = ?,
+            price = ?,
+            image_path = ?
+        WHERE id = ?
+    ");
+
+    $stmtUpdate->bind_param(
+        "issiddsi",
+        $collection_id,
+        $name,
+        $date,
+        $importance,
+        $weight,
+        $price,
+        $image_path,
+        $id
+    );
+
+    $stmtUpdate->execute();
+
+    // Voltar para o item
+    header("Location: item.php?id=$id");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub de Coleções</title>
+    <title>Editar Item</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/edit_item.js" defer></script>
 </head>
 
 <body>
 
-    <!-- Barra superior -->
-    <header class="top-bar-home">
-        <div class="logo">
-            <a href="homepage.html">
-                <img src="images/logo.png" alt="Logo do Sistema">
-            </a>
-        </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
-            <button>🔍</button>
-        </div>
-        <div class="user-icon">
-            <a href="perfil.html">
-                <img src="images/profile.png" alt="Perfil" height="90">
-            </a>
-        </div>
-    </header>
+<header class="top-bar-home">
+    <div class="logo">
+        <a href="homepage.php">
+            <img src="images/logo.png" alt="Logo">
+        </a>
+    </div>
 
+    <div class="search-bar">
+        <input type="text" placeholder="Pesquisar">
+        <button>🔍</button>
+    </div>
 
-    <!-- Conteúdo principal -->
-    <main class="add-item-content">
-    <h1>Editar item:</h1>
+    <div class="user-icon">
+        <a href="perfil.php">
+            <img src="images/profile.png" height="90">
+        </a>
+    </div>
+</header>
 
-    <section class="add-item-container">
-        <form id="add-item-form" class="add-item-form">
+<main class="add-item-content">
+<h1>Editar item:</h1>
 
-            <label for="item-collection"><strong>Coleção:</strong></label>
-            <select id="item-collection" name="item-collection" required>
-                <option value="">Selecione uma coleção</option>
-                <option value="colecao1">Coleção 1</option>
-                <option value="colecao2">Coleção 2</option>
-                <option value="colecao3">Coleção 3</option>
-                <option value="colecao4">Coleção 4</option>
-                <option value="colecao5">Coleção 5</option>
-            </select>
+<section class="add-item-container">
 
-            <label for="item-name"><strong>Nome:</strong></label>
-            <input type="text" id="item-name" name="item-name" placeholder="Digite o nome do item" required>
+<form method="POST" enctype="multipart/form-data" class="add-item-form">
 
-            <label for="item-date"><strong>Data em que foi adquirido:</strong></label>
-            <input type="date" id="item-date" name="item-date" required>
+    <label><strong>Coleção:</strong></label>
+    <select name="collection_id" required>
+        <?php while ($c = $collections->fetch_assoc()): ?>
+            <option value="<?= $c['id'] ?>"
+                <?= ($c['id'] == $item['collection_id']) ? 'selected' : '' ?>>
+                <?= htmlspecialchars($c['title']) ?>
+            </option>
+        <?php endwhile; ?>
+    </select>
 
-            <label for="item-importance"><strong>Importância (1 a 10):</strong></label>
-            <input type="number" id="item-importance" name="item-importance" min="1" max="10" placeholder="Digite um valor de 1 a 10" required>
+    <label><strong>Nome:</strong></label>
+    <input type="text" name="name" value="<?= htmlspecialchars($item['name']) ?>" required>
 
-            <label for="item-weight"><strong>Peso (g):</strong></label>
-            <input type="number" id="item-weight" name="item-weight" placeholder="Insira o peso em gramas" required>
+    <label><strong>Data de aquisição:</strong></label>
+    <input type="date" name="date" value="<?= $item['acquisition_date'] ?>" required>
 
-            <label for="item-price"><strong>Preço (€):</strong></label>
-            <input type="number" id="item-price" name="item-price" placeholder="Insira o preço em euros" step="0.01" required>
-            
-            <div class="edit-item-img">
-                <img src="images/amg_gt3.png" alt="Foto de Item" width="180">
-    
-                <!-- Input escondido -->
-                <input type="file" id="item-upload" accept="image/*" class="hidden-element">
-    
-                <!-- Botão que dispara o input -->
-                <button class="btn-secondary" id="upload-btn">Carregar nova imagem</button>
-            </div>
-        
-            <div class="add-item-buttons">
-                <button type="submit" class="btn-primary">Confirmar</button>
-                <button type="button" id="cancel-btn" class="btn-primary">Desfazer alterações e voltar atrás</button>
-            </div>
-        </form>
-    </section>
+    <label><strong>Importância (1–10):</strong></label>
+    <input type="number" name="importance" min="1" max="10"
+           value="<?= $item['importance'] ?>" required>
+
+    <label><strong>Peso (g):</strong></label>
+    <input type="number" name="weight" value="<?= $item['weight'] ?>" required>
+
+    <label><strong>Preço (€):</strong></label>
+    <input type="number" step="0.01" name="price" value="<?= $item['price'] ?>" required>
+
+    <label><strong>Imagem atual:</strong></label><br>
+    <img src="<?= $item['image_path'] ?>" width="180"><br><br>
+
+    <label><strong>Nova imagem (opcional):</strong></label>
+    <input type="file" name="image" accept="image/*">
+
+    <div class="add-item-buttons">
+        <button type="submit" class="btn-primary">Guardar alterações</button>
+        <button type="button" class="btn-primary"
+            onclick="window.location.href='item.php?id=<?= $item['id'] ?>'">
+            Cancelar
+        </button>
+    </div>
+
+</form>
+</section>
 </main>
 
-
-
-    <!-- Barra inferior -->
-    <footer class="bottom-bar">
-        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
-    </footer>
-    
+<footer class="bottom-bar">
+    <a href="desenvolvedores.php">DESENVOLVEDORES</a>
+</footer>
 
 </body>
 </html>

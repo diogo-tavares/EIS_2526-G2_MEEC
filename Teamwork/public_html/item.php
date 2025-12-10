@@ -1,74 +1,117 @@
+<?php
+session_start();
+require_once 'php/db.php';
+require_once 'php/auth.php';
+
+$id = $_GET['id'] ?? 0;
+$id = intval($id);
+
+// Buscar item + nome da coleção
+$sql = "
+    SELECT items.*, collections.title AS collection_name
+    FROM items
+    JOIN collections ON items.collection_id = collections.id
+    WHERE items.id = $id
+";
+
+$result = $conn->query($sql);
+$item = $result->fetch_assoc();
+
+if (!$item) {
+    die("Item não encontrado.");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub de Coleções</title>
+    <title><?= htmlspecialchars($item['name']) ?></title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/item.js" defer></script>
 </head>
 
 <body>
 
-    <!-- Barra superior -->
-    <header class="top-bar-home">
-        <div class="logo">
-            <a href="homepage.html">
-                <img src="images/logo.png" alt="Logo do Sistema">
-            </a>
-        </div>
-        <div class="search-bar">
-            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
-            <button>🔍</button>
-        </div>
-        <div class="user-icon">
-            <a href="perfil.html">
-                <img src="images/profile.png" alt="Perfil" height="90">
-            </a>
-        </div>
-    </header>
-
-
-    <!-- Conteúdo principal -->
-    <main class="item-page colecao-page">
-    <section class="item-details">
-        <h2>Item</h2>
-
-        <div class="item-info">
-            <p><strong>Nome: </strong>Nome do item</p>
-            <p><strong>Coleção: </strong>Nome da coleção</p>
-            <p><strong>Data em que foi adquirido: </strong>01/01/2025</p>
-            <p><strong>Importância: </strong>5</p>
-            <p><strong>Peso (g): </strong>120</p>
-            <p><strong>Preço (€): </strong>25</p>
-            <p><strong>Imagem: </strong> <img src="images/amg_gt3.png" alt="Item" class="item-image"></p>
-        </div>
-    </section>
-
-        <aside class="item-sidebar">
-            <button class="btn-primary" onclick="window.location.href='editar_item.html'">Editar item</button>
-            <button class="btn-primary" id="delete-item-btn">Eliminar item</button>
-        </aside>
-    </main>
-
-
-
-    <!-- Barra inferior -->
-    <footer class="bottom-bar">
-        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
-    </footer>
-    
-    <!-- Pop-up -->
-    <div id="confirm-popup" class="popup-overlay">
-        <div class="popup-box">
-            <h3>Tem a certeza que deseja eliminar este item?</h3>
-            <div class="popup-buttons">
-                <button id="confirm-yes" class="btn-secondary">Sim</button>
-                <button id="confirm-no" class="btn-secondary">Não</button>
-            </div>
-        </div>
+<header class="top-bar-home">
+    <div class="logo">
+        <a href="homepage.php">
+            <img src="images/logo.png" alt="Logo">
+        </a>
     </div>
 
+    <div class="search-bar">
+        <input type="text" placeholder="Pesquisar">
+        <button>🔍</button>
+    </div>
+
+    <div class="user-icon">
+        <a href="perfil.php">
+            <img src="images/profile.png" height="90">
+        </a>
+    </div>
+</header>
+
+<main class="item-page colecao-page">
+
+<section class="item-details">
+    <h2>Item</h2>
+
+    <div class="item-info">
+        <p><strong>Nome:</strong> <?= htmlspecialchars($item['name']) ?></p>
+
+        <p><strong>Coleção:</strong>
+            <a href="colecao.php?id=<?= $item['collection_id'] ?>">
+                <?= htmlspecialchars($item['collection_name']) ?>
+            </a>
+        </p>
+
+        <?php if (!empty($item['description'])): ?>
+            <p><strong>Descrição:</strong> <?= htmlspecialchars($item['description']) ?></p>
+        <?php endif; ?>
+
+        <?php if (!empty($item['acquisition_date'])): ?>
+            <p><strong>Data de aquisição:</strong> <?= $item['acquisition_date'] ?></p>
+        <?php endif; ?>
+
+        <?php if (!empty($item['importance'])): ?>
+            <p><strong>Importância:</strong> <?= $item['importance'] ?></p>
+        <?php endif; ?>
+
+        <?php if (!empty($item['weight'])): ?>
+            <p><strong>Peso (g):</strong> <?= $item['weight'] ?></p>
+        <?php endif; ?>
+
+        <?php if (!empty($item['price'])): ?>
+            <p><strong>Preço (€):</strong> <?= $item['price'] ?></p>
+        <?php endif; ?>
+
+        <!-- ✅ IMAGEM CORRIGIDA -->
+        <?php if (!empty($item['image_path'])): ?>
+            <p>
+                <strong>Imagem:</strong><br>
+                <img src="<?= $item['image_path'] ?>" class="item-image">
+            </p>
+        <?php endif; ?>
+    </div>
+</section>
+
+<aside class="item-sidebar">
+    <button class="btn-primary"
+        onclick="window.location.href='editar_item.php?id=<?= $item['id'] ?>'">
+        Editar item
+    </button>
+
+    <button class="btn-primary"
+        onclick="window.location.href='php/apagar_item.php?id=<?= $item['id'] ?>'">
+        Eliminar item
+    </button>
+</aside>
+
+</main>
+
+<footer class="bottom-bar">
+    <a href="desenvolvedores.php">DESENVOLVEDORES</a>
+</footer>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 <?php
-// ligação à BD (ficheiro está em /php/db.php)
-require_once __DIR__ . '/php/db.php';
+session_start();
+require_once 'db.php';
+require_once 'auth.php';
 
 // validar ID
 if (!isset($_GET['id']) || !ctype_digit($_GET['id'])) {
@@ -30,6 +31,6 @@ $stmtDel->execute();
 $stmtDel->close();
 
 // 3) voltar para a página da coleção
-header("Location: colecao.php?id=" . $collectionId);
+header("Location: ../colecao.php?id=" . $collectionId);
 exit;
 
