@@ -28,6 +28,7 @@ if (!$item) {
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($item['name']) ?></title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -40,9 +41,9 @@ if (!$item) {
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar">
-        <button>🔍</button>
-    </div>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
+        </div>
 
     <div class="user-icon">
         <a href="perfil.php">

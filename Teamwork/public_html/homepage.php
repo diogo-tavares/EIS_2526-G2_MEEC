@@ -13,6 +13,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 <body>
 
@@ -23,9 +24,9 @@ $result = $conn->query($sql);
         </a>
     </div>
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar">
-        <button>🔍</button>
-    </div>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
+        </div>
     <div class="user-icon">
         <a href="perfil.php">
             <img src="images/profile.png" height="90">

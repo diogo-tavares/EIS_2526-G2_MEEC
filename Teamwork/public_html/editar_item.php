@@ -87,6 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <title>Editar Item</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -99,9 +100,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar">
-        <button>🔍</button>
-    </div>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
+        </div>
 
     <div class="user-icon">
         <a href="perfil.php">

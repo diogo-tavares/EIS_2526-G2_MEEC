@@ -44,6 +44,7 @@ $total_itens = $itens->num_rows;
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($colecao['title']) ?></title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -56,9 +57,9 @@ $total_itens = $itens->num_rows;
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
-        <button>🔍</button>
-    </div>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
+        </div>
 
     <div class="user-icon">
         <a href="perfil.php">
