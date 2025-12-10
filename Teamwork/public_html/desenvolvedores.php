@@ -1,3 +1,18 @@
+<?php
+session_start();
+require_once 'php/db.php';
+require_once 'php/auth.php';
+require_once 'php/get_profile_pic.php';
+
+// 2. Obter ID do utilizador logado
+$user_id = $_SESSION['user_id'];
+
+$sql = "SELECT * FROM developers";
+$result = $conn->query($sql);
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -5,23 +20,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub de Coleções</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 <body>
 
     <!-- Barra superior -->
     <header class="top-bar-home">
         <div class="logo">
-            <a href="homepage.html">
+            <a href="homepage.php">
                 <img src="images/logo.png" alt="Logo do Sistema">
             </a>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
-            <button>🔍</button>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
         </div>
         <div class="user-icon">
-            <a href="perfil.html">
-                <img src="images/profile.png" alt="Perfil" height="90">
+            <a href="perfil.php">
+                <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
             </a>
         </div>
     </header>
@@ -29,68 +45,33 @@
     <!-- Conteúdo principal -->
     <main class="devs-content">
     <h1>Desenvolvedores:</h1>
-
-    <!-- Desenvolvedor 1 -->
-    <section class="dev-container">
-        <div class="dev-img">
-            <img src="images/profile.png" alt="Foto do Desenvolvedor" width="180">
-        </div>
-        <div class="dev-info">
-            <h2>Desenvolvedor 1</h2>
-            <p><strong>Nome: </strong>Primeiro Ultimo</p>
-            <p><strong>E-mail: </strong>dev1@email.com</p>
-            <p><strong>Faculdade: </strong>FEUP</p>
-            <p><strong>Curso: </strong>MEEC</p>
-        </div>
-    </section>
-
-    <!-- Desenvolvedor 2 -->
-    <section class="dev-container">
-        <div class="dev-img">
-            <img src="images/profile.png" alt="Foto do Desenvolvedor" width="180">
-        </div>
-        <div class="dev-info">
-            <h2>Desenvolvedor 2</h2>
-            <p><strong>Nome: </strong>Primeiro Ultimo</p>
-            <p><strong>E-mail: </strong>dev2@email.com</p>
-            <p><strong>Faculdade: </strong>FEUP</p>
-            <p><strong>Curso: </strong>MEEC</p>
-        </div>
-    </section>
     
-    <!-- Desenvolvedor 3 -->
-    <section class="dev-container">
-        <div class="dev-img">
-            <img src="images/profile.png" alt="Foto do Desenvolvedor" width="180">
-        </div>
-        <div class="dev-info">
-            <h2>Desenvolvedor 3</h2>
-            <p><strong>Nome: </strong>Primeiro Ultimo</p>
-            <p><strong>E-mail: </strong>dev3@email.com</p>
-            <p><strong>Faculdade: </strong>FEUP</p>
-            <p><strong>Curso: </strong>MEEC</p>
-        </div>
-    </section>
-    
-    <!-- Desenvolvedor 4 -->
-    <section class="dev-container">
-        <div class="dev-img">
-            <img src="images/profile.png" alt="Foto do Desenvolvedor" width="180">
-        </div>
-        <div class="dev-info">
-            <h2>Desenvolvedor 4</h2>
-            <p><strong>Nome: </strong>Primeiro Ultimo</p>
-            <p><strong>E-mail: </strong>dev4@email.com</p>
-            <p><strong>Faculdade: </strong>FEUP</p>
-            <p><strong>Curso: </strong>MEEC</p>
-        </div>
-    </section>
+    <?php if ($result && $result->num_rows > 0): ?>
+            <?php while($dev = $result->fetch_assoc()): ?>
+                <section class="dev-container">
+                    <div class="dev-img">
+                        <?php 
+                            $dev_img = !empty($dev['photo_path']) ? $dev['photo_path'] : 'images/profile.png'; 
+                        ?>
+                        <img src="<?php echo htmlspecialchars($dev_img); ?>" alt="Foto de <?php echo htmlspecialchars($dev['name']); ?>" width="180" style="border-radius: 50%; object-fit: cover; width: 180px; height: 180px;">
+                    </div>
+                    <div class="dev-info">
+                        <h2><?php echo htmlspecialchars($dev['name']); ?></h2>
+                        <p><strong>E-mail: </strong><?php echo htmlspecialchars($dev['email']); ?></p>
+                        <p><strong>Faculdade: </strong><?php echo htmlspecialchars($dev['faculty']); ?></p>
+                        <p><strong>Curso: </strong><?php echo htmlspecialchars($dev['course']); ?></p>
+                    </div>
+                </section>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <p style="text-align:center; padding: 20px;">Não foram encontrados desenvolvedores registados.</p>
+        <?php endif; ?>
 </main>
 
 
     <!-- Barra inferior -->
     <footer class="bottom-bar">
-        <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+        <a href="desenvolvedores.php">DESENVOLVEDORES</a>
     </footer>
 
 </body>
