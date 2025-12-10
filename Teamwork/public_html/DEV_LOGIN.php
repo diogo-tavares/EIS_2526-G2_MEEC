@@ -6,6 +6,6 @@ $_SESSION['user_id'] = 1;
 $_SESSION['user_name'] = 'Admin (Modo Dev)';
 
 // Redireciona logo para a tua página de eventos
-header("Location: eventos.php");
+header("Location: minhas_coleçoes.php");
 exit();
 ?>

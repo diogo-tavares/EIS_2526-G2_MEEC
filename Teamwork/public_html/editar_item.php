@@ -1,37 +1,65 @@
 <?php
 session_start();
-require_once 'php/db.php';
-require_once 'php/auth.php';
+require_once __DIR__ . "/php/db.php";
+
+if (!isset($_SESSION["user_id"])) {
+    header("Location: login.php");
+    exit;
+}
+
+$user_id = $_SESSION["user_id"];
 
 // Validar ID
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
 if ($id <= 0) {
     die("ID inválido.");
 }
 
-// Buscar item
-$stmt = $conn->prepare("SELECT * FROM items WHERE id = ?");
-$stmt->bind_param("i", $id);
+// Buscar item APENAS se pertencer ao utilizador
+$stmt = $conn->prepare("
+    SELECT items.*
+    FROM items
+    JOIN collections ON items.collection_id = collections.id
+    WHERE items.id = ? AND collections.user_id = ?
+");
+$stmt->bind_param("ii", $id, $user_id);
 $stmt->execute();
 $item = $stmt->get_result()->fetch_assoc();
 
 if (!$item) {
-    die("Item não encontrado.");
+    die("Item não encontrado ou não tem permissão.");
 }
 
-// Buscar coleções
-$collections = $conn->query("SELECT id, title FROM collections");
+// Buscar coleções APENAS do utilizador
+$stmtCols = $conn->prepare("
+    SELECT id, title FROM collections WHERE user_id = ?
+");
+$stmtCols->bind_param("i", $user_id);
+$stmtCols->execute();
+$collections = $stmtCols->get_result();
 
 // Se o formulário for submetido
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $collection_id = intval($_POST['collection_id']);
-    $name = $_POST['name'];
+    $name = trim($_POST['name']);
     $date = $_POST['date'];
     $importance = intval($_POST['importance']);
     $weight = floatval($_POST['weight']);
     $price = floatval($_POST['price']);
+
+    // ✅ Garantir que a coleção pertence ao utilizador
+    $check = $conn->prepare("
+        SELECT id FROM collections 
+        WHERE id = ? AND user_id = ?
+    ");
+    $check->bind_param("ii", $collection_id, $user_id);
+    $check->execute();
+    $checkRes = $check->get_result();
+
+    if ($checkRes->num_rows === 0) {
+        die("Tentativa inválida de mover item para outra coleção.");
+    }
 
     // Manter imagem antiga por defeito
     $image_path = $item['image_path'];
@@ -87,7 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <title>Editar Item</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -100,9 +127,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
     <div class="search-bar">
-            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
-            <div id="search-results" class="search-results-list"></div>
-        </div>
+        <input type="text" placeholder="Pesquisar">
+        <button>🔍</button>
+    </div>
 
     <div class="user-icon">
         <a href="perfil.php">
@@ -145,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="number" step="0.01" name="price" value="<?= $item['price'] ?>" required>
 
     <label><strong>Imagem atual:</strong></label><br>
-    <img src="<?= $item['image_path'] ?>" width="180"><br><br>
+    <img src="<?= htmlspecialchars($item['image_path']) ?>" width="180"><br><br>
 
     <label><strong>Nova imagem (opcional):</strong></label>
     <input type="file" name="image" accept="image/*">

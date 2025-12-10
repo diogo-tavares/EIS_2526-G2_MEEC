@@ -2,16 +2,20 @@
 session_start();
 require_once 'php/db.php';
 require_once 'php/auth.php';
+require_once 'php/get_profile_pic.php';
+
+$user_id = $_SESSION["user_id"];
 
 $id = $_GET['id'] ?? 0;
 $id = intval($id);
 
-// Buscar item + nome da coleção
+// Buscar item + nome da coleção COM SEGURANÇA
+// Adicionámos "AND collections.user_id = $user_id" para garantir que o item é teu
 $sql = "
     SELECT items.*, collections.title AS collection_name
     FROM items
     JOIN collections ON items.collection_id = collections.id
-    WHERE items.id = $id
+    WHERE items.id = $id AND collections.user_id = $user_id
 ";
 
 $result = $conn->query($sql);
@@ -28,7 +32,6 @@ if (!$item) {
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($item['name']) ?></title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -41,9 +44,9 @@ if (!$item) {
     </div>
 
     <div class="search-bar">
-            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
-            <div id="search-results" class="search-results-list"></div>
-        </div>
+        <input type="text" placeholder="Pesquisar">
+        <button>🔍</button>
+    </div>
 
     <div class="user-icon">
         <a href="perfil.php">
