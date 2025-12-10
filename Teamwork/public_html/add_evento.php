@@ -16,9 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $desc = $_POST['event-description'];
 
     // A. Inserir evento na tabela events
-    $stmt = $conn->prepare("INSERT INTO events (creator_id, name, location, event_date, start_time, price, description) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssds", $user_id, $name, $location, $date, $time, $price, $desc);
-    
+    $is_public = isset($_POST['is_public']) ? intval($_POST['is_public']) : 0;
+
+    $stmt = $conn->prepare("INSERT INTO events (creator_id, name, location, event_date, start_time, price, description, is_public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("issssdsi", $user_id, $name, $location, $date, $time, $price, $desc, $is_public);
     if ($stmt->execute()) {
         // Obter o ID do evento que acabou de ser criado
         $new_event_id = $conn->insert_id;
@@ -118,7 +119,20 @@ $todas_colecoes = $stmt_cols->get_result();
 
                 <label for="event-description"><strong>Descrição:</strong></label>
                 <textarea id="event-description" name="event-description" placeholder="Descreva brevemente o evento..." rows="5" required></textarea>
+                
+                <label><strong>Visibilidade para outros users:</strong></label>
+                <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px;">
+                    <label style="align-items: center;">
+                        <input type="radio" name="is_public" value="0" checked> 
+                        Privado (Apenas eu vejo)
+                    </label>    
+                    <label>
+                        <input type="radio" name="is_public" value="1"> 
+                        Público (Visível no Social Hub)
+                    </label>
 
+                </div>              
+                
                 <div class="add-collection-buttons">
                     <button type="submit" class="btn-primary">Criar Evento</button>
                     <button type="button" class="btn-primary" onclick="window.location.href='eventos.php'">Cancelar</button>

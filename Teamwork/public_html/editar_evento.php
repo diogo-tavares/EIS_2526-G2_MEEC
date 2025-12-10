@@ -22,9 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $desc = $_POST['event-description'];
 
     // A. Atualizar dados principais do evento
-    $stmt = $conn->prepare("UPDATE events SET name=?, location=?, event_date=?, start_time=?, price=?, description=? WHERE id=? AND creator_id=?");
-    $stmt->bind_param("ssssdsii", $name, $location, $date, $time, $price, $desc, $event_id, $user_id);
-    
+    $is_public = isset($_POST['is_public']) ? intval($_POST['is_public']) : 0;
+
+    $stmt = $conn->prepare("UPDATE events SET name=?, location=?, event_date=?, start_time=?, price=?, description=?, is_public=? WHERE id=? AND creator_id=?");
+    $stmt->bind_param("ssssdsiii", $name, $location, $date, $time, $price, $desc, $is_public, $event_id, $user_id);
+
     if ($stmt->execute()) {
         // B. Atualizar Coleções Associadas
         // Estratégia: Apagar todas as associações antigas e inserir as novas
@@ -155,7 +157,23 @@ while ($row = $res_linked->fetch_assoc()) {
 
                 <label for="event-description"><strong>Descrição:</strong></label>
                 <textarea id="event-description" name="event-description" rows="5" required><?php echo htmlspecialchars($evento['description']); ?></textarea>
+                
+                <label><strong>Visibilidade para outros users:</strong></label>
+                <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px;">  
+                    <label>
+                        <input type="radio" name="is_public" value="0" 
+                        <?php echo ($evento['is_public'] == 0) ? 'checked' : ''; ?>> 
+                        Privado (Apenas eu vejo)
+                    </label>
+    
+                    <label>
+                        <input type="radio" name="is_public" value="1"
+                        <?php echo ($evento['is_public'] == 1) ? 'checked' : ''; ?>> 
+                        Público (Visível no Social Hub)
+                    </label>
 
+                </div>
+                
                 <div class="add-collection-buttons">
                     <button type="submit" class="btn-primary">Guardar Alterações</button>
                     <button type="button" class="btn-primary" onclick="window.location.href='evento.php?id=<?php echo $event_id; ?>'">Cancelar</button>

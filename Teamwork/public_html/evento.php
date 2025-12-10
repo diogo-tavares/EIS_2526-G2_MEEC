@@ -113,6 +113,13 @@ if ($is_futuro) {
                         <p style="color: #333;">
                             ⏳ Faltam <strong><?php echo $dias_restantes; ?> dias</strong> para o evento começar.
                         </p>
+                        <p style="margin-top: 5px; font-size: 0.95em; color: #555;">
+                            <?php if ($evento['is_public'] == 1): ?>
+                                🔓 Este evento é <strong>Público</strong>.
+                            <?php else: ?>
+                                🔒 Este evento é <strong>Privado</strong>.
+                            <?php endif; ?>
+                        </p>
                     <?php else: ?> 
                         <?php if ($evento['is_present'] === null): ?>
                             <p class="event-action" data-id="<?php echo $evento['id']; ?>" style="cursor: pointer; font-weight: bold;">

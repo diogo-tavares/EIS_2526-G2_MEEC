@@ -1,49 +1,23 @@
 <?php
 session_start();
-require_once __DIR__ . "/php/db.php";
-
-if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
-    exit;
-}
-
-$user_id = $_SESSION["user_id"];
+require_once 'php/db.php';
+require_once 'php/auth.php';
 
 // Se vier diretamente de uma coleção
-$preSelected = isset($_GET['collection_id']) ? intval($_GET['collection_id']) : 0;
+$preSelected = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Buscar APENAS as coleções do utilizador
-$stmtCols = $conn->prepare("
-    SELECT id, title 
-    FROM collections 
-    WHERE user_id = ?
-");
-$stmtCols->bind_param("i", $user_id);
-$stmtCols->execute();
-$collections = $stmtCols->get_result();
+// Buscar todas as coleções
+$collections = $conn->query("SELECT id, title FROM collections");
 
 // Se o formulário for submetido
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $collection_id = intval($_POST['collection_id']);
-    $name = trim($_POST['name']);
+    $name = $_POST['name'];
     $date = $_POST['date'];
     $importance = intval($_POST['importance']);
     $weight = floatval($_POST['weight']);
     $price = floatval($_POST['price']);
-
-    // ✅ Garantir que a coleção pertence ao utilizador
-    $check = $conn->prepare("
-        SELECT id FROM collections 
-        WHERE id = ? AND user_id = ?
-    ");
-    $check->bind_param("ii", $collection_id, $user_id);
-    $check->execute();
-    $checkRes = $check->get_result();
-
-    if ($checkRes->num_rows === 0) {
-        die("Tentativa inválida de inserir item noutra coleção.");
-    }
 
     // Upload da imagem
     $image_path = null;
@@ -91,6 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <title>Adicionar Item</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -103,9 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar">
-        <button>🔍</button>
-    </div>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
+        </div>
 
     <div class="user-icon">
         <a href="perfil.php">

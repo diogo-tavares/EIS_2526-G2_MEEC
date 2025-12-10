@@ -63,7 +63,7 @@ $eventos_passados = array_reverse($eventos_passados);
     <main class="main-content">
         <section class="latest-collections">
             
-            <h2>Eventos Futuros:</h2>
+            <h2>Meus Eventos Futuros:</h2>
             
             <?php if (empty($eventos_futuros)): ?>
                 <p>Não tens eventos futuros agendados.</p>
@@ -79,7 +79,7 @@ $eventos_passados = array_reverse($eventos_passados);
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <h2 class="event-section-title">Eventos Passados:</h2>
+            <h2 class="event-section-title">Meus Eventos Passados:</h2>
 
             <?php if (empty($eventos_passados)): ?>
                 <p>Não tens eventos passados.</p>
