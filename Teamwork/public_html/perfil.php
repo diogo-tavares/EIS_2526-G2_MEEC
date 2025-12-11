@@ -1,66 +1,76 @@
 <?php
-declare(strict_types=1);
+session_start();
+require_once 'php/db.php';
+require_once 'php/auth.php';
+require_once 'php/get_profile_pic.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once __DIR__ . '/php/db.php';
-require_once __DIR__ . '/php/auth.php';
-
-// foto por defeito (podes ter get_profile_pic.php a definir $user_photo)
-$user_photo = 'images/profile.png';
-if (file_exists(__DIR__ . '/php/get_profile_pic.php')) {
-    require_once __DIR__ . '/php/get_profile_pic.php';
-    // se $user_photo vier definido lá e existir na filesystem, fica esse
+// Garante que só entra quem está autenticado
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
 }
 
-$user_id = (int)($_SESSION['user_id'] ?? 0);
+$user_id = $_SESSION['user_id'];
 
-// ---- Utilizador ----
-$user = [
-    'name'       => '',
-    'email'      => '',
-    'birthdate'  => null,
-    'created_at' => null,
-    'photo_path' => null,
-];
+/* -------------------------------------------------------
+   1. OBTER INFO DO UTILIZADOR
+---------------------------------------------------------*/
+$stmt = $conn->prepare("
+    SELECT name, email, birthdate, created_at 
+    FROM users 
+    WHERE id = ?
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user_data = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
-if ($stmt = $conn->prepare("SELECT name, email, birthdate, created_at, photo_path FROM users WHERE id = ? LIMIT 1")) {
-    $stmt->bind_param('i', $user_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    if ($row = $res->fetch_assoc()) {
-        $user = $row;
-        if (!empty($row['photo_path'])) {
-            $user_photo = $row['photo_path'];
-        }
-    }
-    $stmt->close();
+// Formatar datas (opcional)
+$birthdate_formatted = '';
+$register_date_formatted = '';
+
+if (!empty($user_data['birthdate'])) {
+    $birthdate_formatted = (new DateTime($user_data['birthdate']))->format('d/m/Y');
 }
 
-// ---- Nº de coleções do utilizador ----
-$collections_count = 0;
-if ($stmt = $conn->prepare("SELECT COUNT(*) FROM collections WHERE user_id = ?")) {
-    $stmt->bind_param('i', $user_id);
-    $stmt->execute();
-    $stmt->bind_result($collections_count);
-    $stmt->fetch();
-    $stmt->close();
+if (!empty($user_data['created_at'])) {
+    $register_date_formatted = (new DateTime($user_data['created_at']))->format('d/m/Y');
 }
 
-// helpers de data
-$birth_str  = !empty($user['birthdate'])  ? date('d/m/Y', strtotime((string)$user['birthdate'])) : '';
-$reg_str    = !empty($user['created_at']) ? date('d/m/Y', strtotime((string)$user['created_at'])) : '';
-$name_str   = (string)($user['name'] ?? '');
-$email_str  = (string)($user['email'] ?? '');
+/* -------------------------------------------------------
+   2. CONTAR COLEÇÕES DO UTILIZADOR (PARA O BADGE)
+---------------------------------------------------------*/
+$stmt2 = $conn->prepare("SELECT COUNT(*) AS total FROM collections WHERE user_id = ?");
+$stmt2->bind_param("i", $user_id);
+$stmt2->execute();
+$rowCount = $stmt2->get_result()->fetch_assoc();
+$stmt2->close();
+
+$total_collections = (int) $rowCount['total'];
+
+// Lógica do badge
+$badge_class = null;
+$badge_label = null;
+
+if ($total_collections >= 1 && $total_collections <= 2) {
+    $badge_class = 'badge-silver';
+    $badge_label = 'Silver';
+} elseif ($total_collections >= 3 && $total_collections <= 4) {
+    $badge_class = 'badge-gold';
+    $badge_label = 'Gold';
+} elseif ($total_collections >= 5) {
+    $badge_class = 'badge-diamond';
+    $badge_label = 'Diamond';
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub de Coleções</title>
-    <link rel="stylesheet" href="css/style.css?v=2">
+    <title>Hub de Coleções - Perfil</title>
+
+    <link rel="stylesheet" href="css/style.css?v=3">
     <script src="js/profile.js" defer></script>
 </head>
 <body>
@@ -72,46 +82,68 @@ $email_str  = (string)($user['email'] ?? '');
                 <img src="images/logo.png" alt="Logo do Sistema">
             </a>
         </div>
+
         <div class="search-bar">
             <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
             <button>🔍</button>
         </div>
+
         <div class="user-icon">
             <a href="perfil.php">
-                <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90">
+                <img 
+                    src="<?= htmlspecialchars($user_photo ?? 'images/profile.png') ?>" 
+                    alt="Perfil" 
+                    height="90"
+                    style="border-radius:50%;object-fit:cover;"
+                >
             </a>
         </div>
     </header>
 
     <!-- Conteúdo principal -->
     <main class="perfil-content">
-        <!-- Título do perfil -->
         <h1>Perfil:</h1>
 
-        <!-- Container da imagem + informações -->
         <div class="main-content">
             <div class="perfil-container">
-                <!-- Imagem do usuário -->
+                
+                <!-- Imagem do usuário + badge -->
                 <div class="perfil-img">
-                    <img id="profile-img" src="<?php echo htmlspecialchars($user_photo); ?>" alt="Foto do usuário" height="150">
+                    <img 
+                        id="profile-img" 
+                        src="<?= htmlspecialchars($user_photo ?? 'images/profile.png') ?>" 
+                        alt="Foto do usuário" 
+                        height="150"
+                        style="border-radius:50%;object-fit:cover;"
+                    >
+
+                    <?php if ($badge_class && $badge_label): ?>
+                        <div class="user-badge <?= $badge_class ?>">
+                            <?= htmlspecialchars($badge_label) ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Informações do usuário -->
                 <div class="perfil-info">
-                    <p><strong>Nome: </strong><?php echo htmlspecialchars($name_str ?: 'Primeiro Ultimo'); ?></p>
-                    <p><strong>E-mail: </strong><span id="email-display"><?php echo htmlspecialchars($email_str ?: 'email@email.com'); ?></span></p>
-                    <p><strong>Data de nascimento: </strong><span id="birthdate-display"><?php echo htmlspecialchars($birth_str ?: ''); ?></span></p>
-                    <p><strong>Data de registo: </strong><?php echo htmlspecialchars($reg_str ?: ''); ?></p>
-                    <p><strong>Número de coleções: </strong><?php echo (int)$collections_count; ?></p>
+                    <p><strong>Nome: </strong><?= htmlspecialchars($user_data['name']) ?></p>
+                    <p><strong>E-mail: </strong><?= htmlspecialchars($user_data['email']) ?></p>
+                    <p><strong>Data de nascimento: </strong><?= htmlspecialchars($birthdate_formatted) ?></p>
+                    <p><strong>Data de registo: </strong><?= htmlspecialchars($register_date_formatted) ?></p>
+                    <p><strong>Número de coleções: </strong><?= $total_collections ?></p>
 
                     <div class="perfil-buttons">
-                        <button id="edit-profile-btn" class="btn-primary">Editar perfil</button>
-                        <button id="change-email-btn" class="btn-primary"> Alterar e-mail</button>
-                        <button id="change-pass-btn" class="btn-primary">Alterar palavra-passe</button>
+                        <button onclick="window.location.href='editar_perfil.php'" class="btn-primary">Editar perfil</button>
+                        <button onclick="window.location.href='mudar_mail.php'" class="btn-primary">Alterar e-mail</button>
+                        <button onclick="window.location.href='mudar_pass.php'" class="btn-primary">Alterar palavra-passe</button>
                     </div>
                     
-                    <button class="btn-danger" onclick="window.location.href='php/logout.php'">Terminar Sessão</button>
+                    <!-- Se tiveres um logout.php, usa-o aqui. Se não, deixa login.php como antes -->
+                    <button class="btn-danger" onclick="window.location.href='login.php'">
+                        Terminar Sessão
+                    </button>
                 </div>
+
             </div>
         </div>
     </main>
