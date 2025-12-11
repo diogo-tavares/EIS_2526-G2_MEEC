@@ -182,7 +182,7 @@ input {
 }
 
 .top-bar-home .search-bar input {
-    width: 550px;
+    width: 100%;
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -1052,20 +1052,16 @@ body.colecao-page .sidebar .btn-primary {
 /* A caixa flutuante */
 .search-results-list {
     position: absolute;
-    /* Ajusta este valor se houver espaço entre o input e a lista. 
-       45px costuma ser a altura aproximada do input com padding */
     top: 100%;       
     
-    width: 550px;   /* Largura exata do input */
-    
-    left: 50%;      /* Começa no meio */
-    margin-left: -275px; /* Puxa para a esquerda metade da largura (550 / 2) */
+    width: 550px;
+    left:0%;
     
     /* Estilos visuais */
     background: white;
     border: 1px solid #ccc;
     border-top: none; 
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px; 
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     z-index: 1000;
     display: none;
@@ -1124,4 +1120,9 @@ body.colecao-page .sidebar .btn-primary {
     color: #000;          
     text-decoration: none;  
     font-weight: bold;
+}
+
+.search-input-wrapper {
+    position: relative; /* Referência para a lista */
+    width: 550px;       /* Largura fixa da pesquisa */
 }

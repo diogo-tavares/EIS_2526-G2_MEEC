@@ -76,13 +76,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </a>
         </div>
         <div class="search-bar">
-            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
-            <div id="search-results" class="search-results-list"></div>
-            <a href="social.php" class="social-hub-btn">
+    
+    <div class="search-input-wrapper">
+        <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+        <div id="search-results" class="search-results-list"></div>
+    </div>
+
+    <a href="social.php" class="social-hub-btn">
         <span class="social-hub-icon">🌍</span>
         <span class="social-hub-text">Social Hub</span>
     </a>
-        </div>
+
+</div>
         <div class="user-icon">
             <a href="perfil.php">
                 <img src="<?php echo htmlspecialchars($user_photo ?? 'images/profile.png'); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
