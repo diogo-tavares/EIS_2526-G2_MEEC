@@ -1,0 +1,9 @@
+- criar botao em todas as páginas para aceder ao social hub 
+
+- ao eliminar itens e coleçoes testar se as imagems estao a ser apagadas da pasta images
+
+- ao editar item e editar perfil verificar se a nova imagem é guardada e a anterior é apagada na pastas images e users 
+
+- verificar se ha conflito ou erro ao adicionar um item dar e upload a uma imagem que o nome ja exista na pasta (nesse caso ele deve acrescentar um numero ou uma letra no nome da imagem para diferenciar na pasta e so depois guarda o caminho na db)
+ 
+- ao fazer import de uma coleção no social hub verificar se cria uma copia de cada imagem na pasta images (se nao criar quando a coleção original for eliminada as imagens da coleção importada deixarão de existir)
