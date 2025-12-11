@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", function () {
         localStorage.setItem("userEmail", newEmail);
 
         // Redireciona para a página de perfil
-        window.location.href = "perfil.html";
+        window.location.href = "perfil.php";
     });
 
     // Desfazer alterações
     cancelBtn.addEventListener("click", function () {
-        window.location.href = "perfil.html";
+        window.location.href = "perfil.php";
     });
 });

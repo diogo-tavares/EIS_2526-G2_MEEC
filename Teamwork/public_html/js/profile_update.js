@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 // Redireciona para perfil.html
-                window.location.href = "perfil.html";
+                window.location.href = "perfil.php";
             } else {
                 alert("Nenhuma alteração foi feita!");
             }
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Desfazer alterações
     if (cancelBtn) {
         cancelBtn.addEventListener("click", function () {
-            window.location.href = "perfil.html";
+            window.location.href = "perfil.php";
         });
     }
 });
