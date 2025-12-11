@@ -57,7 +57,7 @@ $res_users = $stmt_users->get_result();
             <a href="homepage.php"><img src="images/logo.png" alt="Logo"></a>
         </div>
         
-    <div class="search-bar">
+        <div class="search-bar">
     
     <div class="search-input-wrapper">
         <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
@@ -70,6 +70,7 @@ $res_users = $stmt_users->get_result();
     </a>
 
 </div>
+
         <div class="user-icon">
             <a href="perfil.php">
                 <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
@@ -88,21 +89,39 @@ $res_users = $stmt_users->get_result();
             <section class="latest-collections" style="margin-bottom: 50px;">
                 <?php if ($res_cols->num_rows > 0): ?>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                        
                         <?php while($col = $res_cols->fetch_assoc()): ?>
-                            <div class="mini-event-card" style="position: relative; border-left: 5px solid #ffc107;">
-                                <span style="font-size: 0.8em; background: #e9ecef; padding: 2px 8px; border-radius: 4px; float: right;">
-                                    Por: <?php echo htmlspecialchars($col['owner_name']); ?>
-                                </span>
-                                <h4><?php echo htmlspecialchars($col['title']); ?></h4>
-                                <p><em><?php echo htmlspecialchars($col['description']); ?></em></p>
+                            <div class="mini-event-card" style="position: relative; border-left: 5px solid #ffc107; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <span style="font-size: 0.8em; background: #e9ecef; padding: 2px 8px; border-radius: 4px; float: right;">
+                                        Por: <?php echo htmlspecialchars($col['owner_name']); ?>
+                                    </span>
+                                    
+                                    <h4>
+                                        <a href="detalhes_colecao.php?id=<?php echo $col['id']; ?>" style="text-decoration: none; color: #333;">
+                                            <?php echo htmlspecialchars($col['title']); ?>
+                                        </a>
+                                    </h4>
+                                    
+                                    <p><em><?php echo htmlspecialchars($col['description']); ?></em></p>
+                                </div>
                                 
-                                <a href="php/copy_collection.php?id=<?php echo $col['id']; ?>" 
-                                   class="btn-secondary" 
-                                   style="display: block; text-align: center; margin-top: 15px; text-decoration: none; color: white;">
-                                    📥 Importar Coleção
-                                </a>
+                                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                                    <a href="detalhes_colecao.php?id=<?php echo $col['id']; ?>" 
+                                       class="btn-secondary" 
+                                       style="flex: 1; text-align: center; text-decoration: none; color: white; background-color: #17a2b8;">
+                                        👁️ Ver
+                                    </a>
+
+                                    <a href="php/copy_collection.php?id=<?php echo $col['id']; ?>" 
+                                       class="btn-secondary" 
+                                       style="flex: 1; text-align: center; text-decoration: none; color: white;">
+                                        📥 Importar
+                                    </a>
+                                </div>
                             </div>
                         <?php endwhile; ?>
+
                     </div>
                 <?php else: ?>
                     <p>Nenhuma coleção pública encontrada.</p>
