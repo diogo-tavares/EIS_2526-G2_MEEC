@@ -1,101 +1,115 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    // --- LÓGICA DE ELIMINAR COLEÇÃO ---
     const deleteBtn = document.getElementById("delete-item-btn");
     const popup = document.getElementById("confirm-popup");
-    const yesBtn = document.getElementById("confirm-yes");
     const noBtn = document.getElementById("confirm-no");
 
-    // Abre o popup quando clicas em "Eliminar item"
-    deleteBtn.addEventListener("click", () => {
-        popup.style.display = "flex";
-    });
-
-    // Clica em "Sim" → elimina e redireciona
-    yesBtn.addEventListener("click", () => {
-        window.location.href = "minhas_colecoes.html";
-    });
+    // Abre o popup quando clicas em "Eliminar coleção"
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", () => {
+            popup.style.display = "flex";
+        });
+    }
 
     // Clica em "Não" → fecha o popup
-    noBtn.addEventListener("click", () => {
-        popup.style.display = "none";
-    });
+    if (noBtn) {
+        noBtn.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+    }
     
-    
+    // --- LÓGICA DE CLASSIFICAR EVENTOS (IGUAL À PÁGINA EVENTOS) ---
     const modal = document.getElementById("event-modal");
     const modalConfirm = document.getElementById("confirm-modal");
     const modalCancel = document.getElementById("cancel-modal");
     const presenceSelect = document.getElementById("presence-select");
     const ratingSelect = document.getElementById("rating-select");
+    const hiddenIdInput = document.getElementById("modal-event-id"); // Input escondido para guardar o ID
     
-    let currentActionP = null; // guarda qual <p> foi clicado
-    
-        // Abrir modal ao clicar no texto (seja o link azul .event-action OU o texto já classificado .event-meta-info)
+    // 1. Abrir Modal ao clicar no texto
     document.querySelectorAll(".event-action, .event-meta-info").forEach(p => {
         p.addEventListener("click", () => {
-            currentActionP = p;
+            // Ler o ID do evento que está no HTML (data-id)
+            const eventId = p.getAttribute("data-id");
+            hiddenIdInput.value = eventId;
+            
             modal.style.display = "flex";
             
-            // Reset campos do modal (para permitir refazer a classificação de raiz)
+            // Resetar campos para limpo
             presenceSelect.value = "";
             ratingSelect.value = "";
             ratingSelect.disabled = true; 
         });
     });
 
-    // Habilitar/desabilitar classificação com base na presença
-    presenceSelect.addEventListener("change", () => {
-        if (presenceSelect.value === "sim") {
-            ratingSelect.disabled = false;
-        } else {
-            ratingSelect.disabled = true;
-            ratingSelect.value = ""; 
-        }
-    });
+    // 2. Lógica visual (Habilitar estrelas apenas se "Sim")
+    if (presenceSelect) {
+        presenceSelect.addEventListener("change", () => {
+            // Aceita "1" ou "sim" para compatibilidade
+            if (presenceSelect.value === "1" || presenceSelect.value === "sim") {
+                ratingSelect.disabled = false;
+            } else {
+                ratingSelect.disabled = true;
+                ratingSelect.value = ""; 
+            }
+        });
+    }
 
-    // Confirmar
-    modalConfirm.addEventListener("click", () => {
-        const presence = presenceSelect.value;
-        const rating = ratingSelect.value; 
+    // 3. Confirmar e Gravar na Base de Dados (AJAX)
+    if (modalConfirm) {
+        modalConfirm.addEventListener("click", () => {
+            const presence = presenceSelect.value;
+            const rating = ratingSelect.value;
+            const eventId = hiddenIdInput.value;
 
-        // Validações
-        if (!presence) {
-            alert("Por favor, selecione a presença!");
-            return;
-        }
+            // Validações
+            if (presence === "") {
+                alert("Por favor, selecione a presença!");
+                return;
+            }
+            if ((presence === "1" || presence === "sim") && rating === "") {
+                alert("Por favor, selecione a classificação!");
+                return;
+            }
 
-        if (presence === "sim" && !rating) {
-            alert("Por favor, selecione a classificação!");
-            return;
-        }
+            // Converter presença para 0 ou 1 (caso o value seja "sim"/"nao")
+            // Se o teu HTML usa value="1", isto mantém o 1. Se usa "sim", converte.
+            const presenceValue = (presence === "1" || presence === "sim") ? 1 : 0;
 
-        // Lógica de Exibição
-        let ratingDisplay;
+            // Enviar pedido ao servidor
+            fetch('php/update_rating.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event_id: eventId,
+                    presence: presenceValue,
+                    rating: rating
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro HTTP: " + response.status);
+                return response.json();
+            })
+            .then(data => {
+                if (data.sucesso) {
+                    // Recarregar a página para mostrar os dados atualizados vindos do PHP
+                    window.location.reload();
+                } else {
+                    alert("Erro ao gravar: " + (data.erro || "Erro desconhecido"));
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert("Erro de comunicação com o servidor.");
+            });
+        });
+    }
 
-        if (presence === "nao") {
-            ratingDisplay = "---";
-        } else {
-            // Converte número em estrelas
-            ratingDisplay = "⭐".repeat(parseInt(rating));
-        }
-
-        const presenceFormatted = presence.charAt(0).toUpperCase() + presence.slice(1);
-
-        // 1. Remove a classe antiga (caso seja a primeira vez a clicar)
-        currentActionP.classList.remove("event-action"); 
-        
-        // 2. Garante que tem a classe de metadados
-        currentActionP.classList.add("event-meta-info");
-
-        // 3. Atualiza o HTML
-        currentActionP.innerHTML = `<strong>Presença:</strong> ${presenceFormatted} | <strong>Classificação:</strong> ${ratingDisplay}`;
-
-        modal.style.display = "none"; 
-    });
-
-    // Cancelar
-    modalCancel.addEventListener("click", () => {
-        modal.style.display = "none";
-    });  
-    
-    
+    // 4. Cancelar Modal
+    if (modalCancel) {
+        modalCancel.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+    }  
 });

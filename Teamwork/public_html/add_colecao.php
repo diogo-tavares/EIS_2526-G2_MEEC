@@ -12,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['collection-name']);
     $date = $_POST['collection-date'];
     $desc = trim($_POST['collection-description']);
+    $is_public = isset($_POST['is_public']) ? intval($_POST['is_public']) : 0;
 
     // Validação simples
     if (empty($title) || empty($date) || empty($desc)) {
@@ -19,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // 2. Inserir a Coleção na tabela 'collections'
         // Nota: O campo na BD chama-se 'title' e 'created_date'
-        $stmt = $conn->prepare("INSERT INTO collections (user_id, title, description, created_date) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("isss", $user_id, $title, $desc, $date);
+        $stmt = $conn->prepare("INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssi", $user_id, $title, $desc, $date, $is_public);
 
         if ($stmt->execute()) {
             // Recuperar o ID da coleção acabada de criar
@@ -63,6 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Coleção</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
     </head>
 
 <body>
@@ -74,7 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </a>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Pesquisar...">
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
         </div>
         <div class="user-icon">
             <a href="perfil.php">
@@ -113,6 +116,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="collection-description"><strong>Descrição:</strong></label>
                 <textarea id="collection-description" name="collection-description" placeholder="Descreva brevemente a coleção..." rows="5" required></textarea>
 
+                <label><strong>Visibilidade para outros users:</strong></label>
+                <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px;">  
+                    <label>
+                        <input type="radio" name="is_public" value="0" checked>
+                        Privado (Apenas eu vejo)
+                    </label>
+    
+                    <label>
+                        <input type="radio" name="is_public" value="1">
+                        Público (Visível no Social Hub)
+                    </label>
+
+                </div>                
+                
                 <div class="add-collection-buttons">
                     <button type="submit" class="btn-primary">Confirmar</button>
                     <button type="button" id="cancel-btn" class="btn-primary" onclick="window.location.href='minhas_colecoes.php'">Cancelar</button>

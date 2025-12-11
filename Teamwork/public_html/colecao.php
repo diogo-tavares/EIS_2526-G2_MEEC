@@ -129,7 +129,7 @@ $events_past = $stmt_past->get_result();
                             <?php endif; ?>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p style="color: #777;">Esta coleção ainda não tem itens.</p>
+                        <p style="grid-column: 1 / -1; color: #333; margin-bottom: 20px;">Esta coleção ainda não tem itens.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -149,7 +149,7 @@ $events_past = $stmt_past->get_result();
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p style="margin-bottom: 20px;">Não há eventos futuros associados.</p>
+                        <p style="margin-bottom: 20px;  color: #333">Não há eventos futuros associados.</p>
                     <?php endif; ?>
                 </div>
 
@@ -180,7 +180,7 @@ $events_past = $stmt_past->get_result();
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p>Não há eventos passados.</p>
+                        <p style="margin-bottom: 20px;  color: #333">Não há eventos passados.</p>
                     <?php endif; ?>
                 </div>
                 
@@ -205,7 +205,7 @@ $events_past = $stmt_past->get_result();
             <h3>Tem a certeza que deseja eliminar esta coleção?</h3>
             <p style="font-size: 0.9em; margin-bottom: 15px;">(Isto apagará todos os itens desta coleção)</p>
             <div class="popup-buttons">
-                <button id="confirm-yes" class="btn-secondary" onclick="window.location.href='php/apagar_colecao.php?id=<?php echo $collection_id; ?>'">Sim</button>
+                <button id="confirm-yes" class="btn-secondary" onclick="window.location.href='php/delete_collection.php?id=<?php echo $collection_id; ?>'">Sim</button>
                 <button id="confirm-no" class="btn-secondary">Não</button>
             </div>
         </div>

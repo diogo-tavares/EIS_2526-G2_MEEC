@@ -48,9 +48,8 @@ $res_events = $stmt_events->get_result();
             </a>
         </div>
         <div class="search-bar">
-            <input type="text" id="live-search-input" placeholder="Pesquisar por coleções, eventos ou tags" autocomplete="off">
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
             <div id="search-results" class="search-results-list"></div>
-            <button>🔍</button>
         </div>
         <div class="user-icon">
             <a href="perfil.php">

@@ -19,26 +19,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['collection-name']);
     $date = $_POST['collection-date'];
     $desc = trim($_POST['collection-description']);
+    
+    // NOVO: Receber a visibilidade (0 ou 1)
+    $is_public = isset($_POST['is_public']) ? intval($_POST['is_public']) : 0;
 
     // Validação simples
     if (empty($title) || empty($date) || empty($desc)) {
         $erro = "Por favor, preencha todos os campos obrigatórios.";
     } else {
         // A. Atualizar dados principais na tabela 'collections'
-        // Garante que só atualiza se o user_id for o dono (segurança)
-        $stmt = $conn->prepare("UPDATE collections SET title=?, description=?, created_date=? WHERE id=? AND user_id=?");
-        $stmt->bind_param("sssii", $title, $desc, $date, $col_id, $user_id);
+        // ATUALIZADO: Adicionado is_public=?
+        $stmt = $conn->prepare("UPDATE collections SET title=?, description=?, created_date=?, is_public=? WHERE id=? AND user_id=?");
+        // ATUALIZADO: Adicionado 'i' extra no meio e a variável $is_public
+        $stmt->bind_param("sssiii", $title, $desc, $date, $is_public, $col_id, $user_id);
 
         if ($stmt->execute()) {
             
             // B. Atualizar Tags (Estratégia: Apagar antigas e inserir novas)
-            // Primeiro apaga todas as tags desta coleção
             $conn->query("DELETE FROM collection_tags WHERE collection_id = $col_id");
 
-            // Prepara a inserção das novas
             $stmt_tag = $conn->prepare("INSERT INTO collection_tags (collection_id, tag_name) VALUES (?, ?)");
 
-            // Loop pelos 5 campos de tags
             for ($i = 1; $i <= 5; $i++) {
                 if (!empty($_POST["tag-$i"])) {
                     $tag_name = trim($_POST["tag-$i"]);
@@ -81,7 +82,6 @@ $tags_atuais = [];
 while ($row = $res_tags->fetch_assoc()) {
     $tags_atuais[] = $row['tag_name'];
 }
-// Preenche o array até ter 5 posições (para evitar erros de índice no HTML)
 while (count($tags_atuais) < 5) {
     $tags_atuais[] = "";
 }
@@ -94,6 +94,7 @@ while (count($tags_atuais) < 5) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Coleção</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
     </head>
 
 <body>
@@ -105,7 +106,8 @@ while (count($tags_atuais) < 5) {
             </a>
         </div>
         <div class="search-bar">
-            <input type="text" placeholder="Pesquisar...">
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
         </div>
         <div class="user-icon">
             <a href="perfil.php">
@@ -145,7 +147,23 @@ while (count($tags_atuais) < 5) {
 
                 <label for="collection-description"><strong>Descrição:</strong></label>
                 <textarea id="collection-description" name="collection-description" rows="5" required><?php echo htmlspecialchars($colecao['description']); ?></textarea>
+                
+                <label><strong>Visibilidade para outros users:</strong></label>
+                <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px;">  
+                    <label>
+                        <input type="radio" name="is_public" value="0" 
+                        <?php echo ($colecao['is_public'] == 0) ? 'checked' : ''; ?>> 
+                        Privado (Apenas eu vejo)
+                    </label>
+    
+                    <label>
+                        <input type="radio" name="is_public" value="1"
+                        <?php echo ($colecao['is_public'] == 1) ? 'checked' : ''; ?>> 
+                        Público (Visível no Social Hub)
+                    </label>
 
+                </div>
+                                
                 <div class="add-collection-buttons">
                     <button type="submit" class="btn-primary">Guardar Alterações</button>
                     <button type="button" id="cancel-btn" class="btn-primary" onclick="window.location.href='colecao.php?id=<?php echo $col_id; ?>'">Cancelar</button>

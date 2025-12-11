@@ -87,19 +87,20 @@ $result = $stmt->get_result();
 
         <aside class="sidebar">
             <button class="btn-primary" onclick="window.location.href='add_colecao.php'">Adicionar coleção</button>
-            <button class="btn-secondary" onclick="window.location.href='eventos.php'">Ver todos os eventos</button>
+            <button class="btn-primary" style="margin-top: 3px;" onclick="window.location.href='eventos.php'">Ver todos os eventos</button>
             
-            <button class="btn-secondary" onclick="window.location.href='php/export_collections.php'" style="margin-top: 10px;">
-                Exportar Coleções (CSV)
+            <div style="margin-top: 5px;">
+            <button class="btn-secondary" onclick="window.location.href='php/export_collections.php'" style="width:100%; margin-bottom: 5px;"">
+                Exportar CSV
             </button>
             
-            <form action="php/import_collections.php" method="POST" enctype="multipart/form-data" id="import-form" style="margin-top: 5px;">
+            <form action="php/import_collections.php" method="POST" enctype="multipart/form-data" id="import-form"">
                 <input type="file" name="csv_file" id="csv-input" accept=".csv" style="display: none;" onchange="document.getElementById('import-form').submit()">
                 <button type="button" class="btn-secondary" onclick="document.getElementById('csv-input').click()" style="width: 100%;">
                     Importar CSV
                 </button>
             </form>
-
+            </div>        
         </aside>
     </main>
 

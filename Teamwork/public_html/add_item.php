@@ -91,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <title>Adicionar Item</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 </head>
 
 <body>
@@ -103,15 +104,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar">
-        <button>🔍</button>
-    </div>
+            <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+            <div id="search-results" class="search-results-list"></div>
+        </div>
 
     <div class="user-icon">
-        <a href="perfil.php">
-            <img src="images/profile.png" height="90">
-        </a>
-    </div>
+            <a href="perfil.php">
+                <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
+            </a>
+        </div>
 </header>
 
 <main class="add-item-content">
