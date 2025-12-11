@@ -16,12 +16,12 @@ $stmt_cols->bind_param("i", $user_id);
 $stmt_cols->execute();
 $res_cols = $stmt_cols->get_result();
 
-// --- QUERY 2: Eventos nos próximos 7 dias ---
-// Intervalo: Hoje até Hoje + 7 dias
+// --- QUERY 2: Eventos nos próximos 15 dias ---
+// Intervalo: Hoje até Hoje + 15 dias
 $sql_events = "SELECT id, name, event_date, start_time, location 
                FROM events 
                WHERE creator_id = ? 
-               AND event_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+               AND event_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 15 DAY)
                ORDER BY event_date ASC, start_time ASC";
 $stmt_events = $conn->prepare($sql_events);
 $stmt_events->bind_param("i", $user_id);
@@ -115,7 +115,7 @@ $res_events = $stmt_events->get_result();
             <button class="btn-primary" onclick="window.location.href='add_colecao.php'">Adicionar coleção</button>
             
             <div class="upcoming-events" style="margin-top: 25px;">
-                <h3>Eventos nos próximos 7 dias</h3>
+                <h3>Eventos nos próximos 15 dias</h3>
 
                 <?php if ($res_events->num_rows > 0): ?>
                     <?php while($event = $res_events->fetch_assoc()): ?>
