@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . "/php/db.php";
+require_once 'php/db.php';
+require_once 'php/auth.php';
+require_once 'php/get_profile_pic.php';
 
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
@@ -106,6 +108,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="search-bar">
             <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
             <div id="search-results" class="search-results-list"></div>
+            <a href="social.php" class="social-hub-btn">
+        <span class="social-hub-icon">🌍</span>
+        <span class="social-hub-text">Social Hub</span>
+    </a>
         </div>
 
     <div class="user-icon">
@@ -149,7 +155,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="number" name="price" step="0.01" required>
 
     <label><strong>Imagem:</strong></label>
-    <input type="file" name="image" accept="image/*">
+    <input type="file" name="image" accept="image/*" id="item-image-input">
+
+    <img id="item-preview-img" src="#" alt="Pré-visualização" style="display:none; max-width: 200px; margin-top: 10px; border-radius: 8px;">
 
     <div class="add-item-buttons">
         <button type="submit" class="btn-primary">Confirmar</button>
@@ -164,6 +172,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <footer class="bottom-bar">
     <a href="desenvolvedores.php">DESENVOLVEDORES</a>
 </footer>
+    
+    
+<script src="js/add_edit_item.js"></script>
 
 </body>
 </html>

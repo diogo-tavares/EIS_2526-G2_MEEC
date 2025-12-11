@@ -50,6 +50,11 @@ $res_events = $stmt_events->get_result();
         <div class="search-bar">
             <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
             <div id="search-results" class="search-results-list"></div>
+            
+            <a href="social.php" class="social-hub-btn">
+        <span class="social-hub-icon">🌍</span>
+        <span class="social-hub-text">Social Hub</span>
+    </a>
         </div>
         <div class="user-icon">
             <a href="perfil.php">
@@ -133,7 +138,7 @@ $res_events = $stmt_events->get_result();
                     <?php endwhile; ?>
                 <?php else: ?>
                     <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
-                        Não tens eventos agendados para os próximos 7 dias.
+                        Não tens eventos agendados para os próximos 15 dias.
                     </p>
                 <?php endif; ?>
 

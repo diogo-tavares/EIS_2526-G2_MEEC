@@ -86,6 +86,37 @@ input {
     background-color: #565e64;
 }
 
+/* ========================================= */
+/* BOTÃO SOCIAL HUB (HEADER)                 */
+/* ========================================= */
+
+.social-hub-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 80px; /* Espaço entre a barra de pesquisa e o botão */
+    white-space: nowrap; /* Impede que o texto quebre linha */
+    transition: transform 0.2s ease, color 0.2s ease; /* Pequena animação suave */
+}
+
+/* Efeito ao passar o rato (opcional, mas recomendado para UX) */
+.social-hub-btn:hover {
+    color: #007bff; 
+    transform: scale(1.05);
+}
+
+.social-hub-icon {
+    font-size: 2.5em; /* Tamanho grande do planeta */
+    line-height: 1;
+}
+
+.social-hub-text {
+    font-size: 1.1em; /* Tamanho do texto */
+}
+
 /* Texto de registo */
 .register-text {
     margin: 20px 0 10px;
@@ -147,10 +178,11 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .top-bar-home .search-bar input {
-    width: 60%;
+    width: 550px;
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
@@ -1013,7 +1045,6 @@ body.colecao-page .sidebar .btn-primary {
 
 
 /* --- Live Search --- */
-/* IMPORTANTE: Adiciona isto à tua classe .search-bar existente */
 .top-bar-home .search-bar {
     position: relative; /* Necessário para a lista absoluta funcionar */
 }
@@ -1021,19 +1052,26 @@ body.colecao-page .sidebar .btn-primary {
 /* A caixa flutuante */
 .search-results-list {
     position: absolute;
-    top: 100%;       /* Cola logo abaixo da barra */
-    left: 0;
-    width: 100%;     /* Mesma largura do input */
+    /* Ajusta este valor se houver espaço entre o input e a lista. 
+       45px costuma ser a altura aproximada do input com padding */
+    top: 100%;       
+    
+    width: 550px;   /* Largura exata do input */
+    
+    left: 50%;      /* Começa no meio */
+    margin-left: -275px; /* Puxa para a esquerda metade da largura (550 / 2) */
+    
+    /* Estilos visuais */
     background: white;
     border: 1px solid #ccc;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
+    border-top: none; 
+    border-radius: 0 0 6px 6px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 1000;   /* Garante que fica por cima de tudo */
-    display: none;   /* Escondido por defeito */
+    z-index: 1000;
+    display: none;
     text-align: left;
-    max-height: 300px; /* Limite de altura */
-    overflow-y: auto;  /* Scroll se houver muitos resultados */
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 /* Cada linha de resultado */
@@ -1064,7 +1102,7 @@ body.colecao-page .sidebar .btn-primary {
     padding: 3px 6px;
     border-radius: 4px;
     margin-right: 10px;
-    min-width: 70px;
+    min-width: 40px;
     text-align: center;
 }
 

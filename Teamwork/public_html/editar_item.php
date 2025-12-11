@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . "/php/db.php";
-require_once __DIR__ . "/php/auth.php"; // Boa prática garantir o auth
-require_once __DIR__ . "/php/get_profile_pic.php"; // Necessário para a foto de perfil no header
+require_once 'php/db.php';
+require_once 'php/auth.php';
+require_once 'php/get_profile_pic.php';
 
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
@@ -69,15 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Se for enviada nova imagem
     if (!empty($_FILES["image"]["name"])) {
 
-        // =========================================================
-        // 1. APAGAR A IMAGEM ANTIGA (Se existir)
-        // =========================================================
-        // Verifica se há um caminho guardado e se o ficheiro existe
-        if (!empty($item['image_path']) && file_exists($item['image_path'])) {
-            unlink($item['image_path']); // Apaga o ficheiro antigo
-        }
-        // =========================================================
-
         $target_dir = "images/items/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0777, true);
@@ -141,11 +132,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="search-bar">
             <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
             <div id="search-results" class="search-results-list"></div>
+            <a href="social.php" class="social-hub-btn">
+        <span class="social-hub-icon">🌍</span>
+        <span class="social-hub-text">Social Hub</span>
+    </a>
         </div>
 
     <div class="user-icon">
             <a href="perfil.php">
-                <img src="<?php echo htmlspecialchars($user_photo ?? 'images/profile.png'); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
+                <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
             </a>
         </div>
 </header>
@@ -184,10 +179,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <input type="number" step="0.01" name="price" value="<?= $item['price'] ?>" required>
 
     <label><strong>Imagem atual:</strong></label><br>
-    <img src="<?= htmlspecialchars($item['image_path']) ?>" width="180" style="border-radius: 5px; margin-top: 5px;"><br><br>
+    <img src="<?= htmlspecialchars($item['image_path']) ?>" id="item-preview-img" width="180" style="border-radius: 8px;"><br><br>
 
     <label><strong>Nova imagem (opcional):</strong></label>
-    <input type="file" name="image" accept="image/*">
+    <input type="file" name="image" accept="image/*" id="item-image-input">
 
     <div class="add-item-buttons">
         <button type="submit" class="btn-primary">Guardar alterações</button>
@@ -205,5 +200,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <a href="desenvolvedores.php">DESENVOLVEDORES</a>
 </footer>
 
+<script src="js/add_edit_item.js"></script>    
 </body>
 </html>

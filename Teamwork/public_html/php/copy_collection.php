@@ -27,7 +27,7 @@ $conn->begin_transaction();
 
 try {
     // 2. Criar a NOVA coleção
-    $new_title = $col_data['title'] . " (Cópia)";
+    $new_title = $col_data['title'] . " (Importada)";
     $desc = $col_data['description'];
 
     $stmt_insert = $conn->prepare("INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES (?, ?, ?, NOW(), 0)");

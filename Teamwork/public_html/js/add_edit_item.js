@@ -1,29 +1,25 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("add-item-form");
-    const cancelBtn = document.getElementById("cancel-btn");
+    // Procura os elementos pelos IDs (têm de ser iguais nos dois PHPs)
+    const imageInput = document.getElementById("item-image-input");
+    const previewImg = document.getElementById("item-preview-img");
 
-    // Botão confirmar
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
+    // Só corre se os elementos existirem na página
+    if (imageInput && previewImg) {
+        
+        // Deteta quando escolhes um ficheiro
+        imageInput.addEventListener("change", function () {
+            const file = imageInput.files[0];
 
-        const fields = form.querySelectorAll("input, select, textarea");
-        let allFilled = true;
+            if (file) {
+                const reader = new FileReader();
 
-        fields.forEach(f => {
-            if (!f.value) allFilled = false;
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result; // Muda a imagem
+                    previewImg.style.display = "block"; // Garante que se vê
+                };
+
+                reader.readAsDataURL(file);
+            }
         });
-
-        if (!allFilled) {
-            alert("Por favor, preencha todos os campos!");
-            return;
-        }
-
-        // Redireciona para "minhas_colecoes.html"
-        window.location.href = "minhas_colecoes.html";
-    });
-
-    // Botão cancelar
-    cancelBtn.addEventListener("click", function() {
-        window.location.href = "minhas_colecoes.html";
-    });
+    }
 });
