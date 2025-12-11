@@ -56,16 +56,16 @@ if (!$item) {
         </div>
 </header>
 
-<main class="item-page colecao-page">
+<main class="main-content">
 
-<section class="item-details">
+<section class="collection-details">
     <h2>Item</h2>
 
-    <div class="item-info">
-        <p><strong>Nome:</strong> <?= htmlspecialchars($item['name']) ?></p>
+    <div class="item-info" style="background-color: #f8f9fa; margin-bottom: 50px; border: 1px solid #ddd; border-radius: 8px; padding: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <p> <span style="color: #007bff; font-weight: bold; font-size: 1.8em;"> <?= htmlspecialchars($item['name']) ?> </span> </p>
 
         <p><strong>Coleção:</strong>
-            <a href="colecao.php?id=<?= $item['collection_id'] ?>">
+            <a href="colecao.php?id=<?= $item['collection_id'] ?>" class="text-link">
                 <?= htmlspecialchars($item['collection_name']) ?>
             </a>
         </p>
@@ -100,7 +100,7 @@ if (!$item) {
     </div>
 </section>
 
-<aside class="item-sidebar">
+<aside class="sidebar">
     <button class="btn-primary"
         onclick="window.location.href='editar_item.php?id=<?= $item['id'] ?>'">
         Editar item

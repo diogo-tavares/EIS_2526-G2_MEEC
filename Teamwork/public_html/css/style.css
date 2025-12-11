@@ -1069,6 +1069,21 @@ body.colecao-page .sidebar .btn-primary {
 }
 
 /* Cores das etiquetas */
-.tag-evento   { background-color: #e3f2fd; color: #007bff; } /* Azul */
-.tag-colecao  { background-color: #fff3cd; color: #856404; } /* Amarelo */
-.tag-item     { background-color: #d4edda; color: #155724; } /* Verde */
+.tag-evento   { background-color: #e3f2fd; color: #007bff; } 
+.tag-colecao  { background-color: #fff3cd; color: #856404; } 
+.tag-item     { background-color: #d4edda; color: #155724; } 
+
+
+/* Link Discreto (Parece texto normal) */
+.text-link {
+    text-decoration: none; 
+    color: inherit;         
+    cursor: pointer;        
+    transition: color 0.2s ease;
+}
+
+.text-link:hover {
+    color: #000;          
+    text-decoration: none;  
+    font-weight: bold;
+}
