@@ -1,9 +1,21 @@
-- criar botao em todas as páginas para aceder ao social hub 
+- ao eliminar itens e coleçoes testar se as imagens estao a ser apagadas da pasta images
 
-- ao eliminar itens e coleçoes testar se as imagems estao a ser apagadas da pasta images
+- ao editar item se a nova imagem é guardada e a anterior é apagada na pastas images e users 
 
-- ao editar item e editar perfil verificar se a nova imagem é guardada e a anterior é apagada na pastas images e users 
+-----------------------------------
 
-- verificar se ha conflito ou erro ao adicionar um item dar e upload a uma imagem que o nome ja exista na pasta (nesse caso ele deve acrescentar um numero ou uma letra no nome da imagem para diferenciar na pasta e so depois guarda o caminho na db)
- 
-- ao fazer import de uma coleção no social hub verificar se cria uma copia de cada imagem na pasta images (se nao criar quando a coleção original for eliminada as imagens da coleção importada deixarão de existir)
+- testar o login, registo, mudar pass e mudar email para ter a certeza que não há falhas e funciona sempre
+
+- testar se o editar perfil altera a data de nascimento corretamente e guarda na db
+
+- testar o editar perfil, relativo à imagem de perfil: 
+   * quando é adicionada uma imagem de perfil a imagem deve ser guardada na pasta images/users e guardado este caminho (images/users + nome da imagem) na db
+   * caso seja adicionada uma imagem cujo nome ja existe na pasta images/users o codigo php deve adicionar uma letra ou um numero ou algo do genero para diferenciar       da existente 
+   * quando o user carrega uma imagem de perfil, antes de ele confirmar as alterações deve conseguir vê-la no lugar da imagem de perfil anterior - isto está implementado no profile_update.js e deve ser mantido
+
+- testar o ranking do user, feature adicionada recentemente - não deve ser necessário acrescentar nada na base de dados para isto, apenas uma lógica simples na pagina de perfil que vai buscar o numero de coleções do user e define o ranking atraves daí. Ideia: até pode ir buscar o número de coleções desse user com 6 ou mais itens e o número de coleções com 5 ou menos itens , e fazer uma lógica que coleções com 6 ou mais itens valem 1.5 pontos e coleções com 5 ou menos valem 1 ponto . Depois convertem os pontos em ranking , por exemplo : 
+   * [0; 4[ - bronze
+   * [4; 7[ - silver
+   * [7; 10[ - gold
+   * [10; 13[ - diamond 
+   * ...
