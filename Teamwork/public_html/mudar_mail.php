@@ -1,80 +1,46 @@
 <?php
 declare(strict_types=1);
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/php/db.php';
 require_once __DIR__ . '/php/auth.php';
 
-$user_id = (int)($_SESSION['user_id'] ?? 0);
-$errors = [];
-$success = '';
-
-function has_column(mysqli $conn, string $table, string $col): bool {
-    $stmt = $conn->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
-    $stmt->bind_param('s', $col);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $ok = $res && $res->num_rows > 0;
-    $stmt->close();
-    return $ok;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $user_id   = (int)($_SESSION['user_id'] ?? 0);
     $new_email = trim($_POST['new_email'] ?? '');
     $curr_pass = (string)($_POST['current_password'] ?? '');
 
-    if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'E-mail inválido.';
-    }
+    if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) { header('Location: mudar_mail.php?err=email'); exit(); }
 
-    // Verificar se novo e-mail já existe noutro utilizador
-    if (empty($errors)) {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id <> ? LIMIT 1");
-        $stmt->bind_param('si', $new_email, $user_id);
-        $stmt->execute();
-        $exists = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
-        if ($exists) {
-            $errors[] = 'Este e-mail já está a ser utilizado.';
-        }
-    }
+    // e-mail já usado por outro utilizador?
+    $stmt = $conn->prepare('SELECT id FROM users WHERE email = ? AND id <> ? LIMIT 1');
+    $stmt->bind_param('si', $new_email, $user_id);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) { $stmt->close(); header('Location: mudar_mail.php?err=exists'); exit(); }
+    $stmt->close();
 
-    // Buscar secret para validar password atual
-    if (empty($errors)) {
-        $use_hash = has_column($conn, 'users', 'password_hash');
-        $col = $use_hash ? 'password_hash' : 'password';
-        $stmt = $conn->prepare("SELECT $col AS secret FROM users WHERE id = ? LIMIT 1");
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $row = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+    // confirmar password atual (coluna users.password)
+    $stmt = $conn->prepare('SELECT password FROM users WHERE id = ? LIMIT 1');
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $stmt->bind_result($secret);
+    if (!$stmt->fetch()) { $stmt->close(); header('Location: mudar_mail.php?err=user'); exit(); }
+    $stmt->close();
 
-        if (!$row) {
-            $errors[] = 'Utilizador não encontrado.';
-        } else {
-            $secret = (string)$row['secret'];
-            $ok = $use_hash ? password_verify($curr_pass, $secret) : hash_equals($secret, $curr_pass);
-            if (!$ok) {
-                $errors[] = 'Palavra-passe atual incorreta.';
-            }
-        }
-    }
+    if (!hash_equals((string)$secret, $curr_pass)) { header('Location: mudar_mail.php?err=pass'); exit(); }
 
-    // Update email
-    if (empty($errors)) {
-        $stmt = $conn->prepare("UPDATE users SET email = ? WHERE id = ?");
-        $stmt->bind_param('si', $new_email, $user_id);
-        $stmt->execute();
-        $stmt->close();
-        $_SESSION['user_email'] = $new_email;
-        $success = 'E-mail atualizado com sucesso.';
-        header('Location: perfil.php?changed=email');
-        exit();
-    }
+    // atualizar e-mail
+    $stmt = $conn->prepare('UPDATE users SET email = ? WHERE id = ?');
+    $stmt->bind_param('si', $new_email, $user_id);
+    $stmt->execute();
+    $stmt->close();
+
+    $_SESSION['user_email'] = $new_email;
+    header('Location: perfil.php?changed=email');
+    exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>

@@ -1,81 +1,39 @@
 <?php
 declare(strict_types=1);
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/php/db.php';
 require_once __DIR__ . '/php/auth.php';
 
-$user_id = (int)($_SESSION['user_id'] ?? 0);
-$errors = [];
-$success = '';
-
-function has_column(mysqli $conn, string $table, string $col): bool {
-    $stmt = $conn->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
-    $stmt->bind_param('s', $col);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $ok = $res && $res->num_rows > 0;
-    $stmt->close();
-    return $ok;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $user_id = (int)($_SESSION['user_id'] ?? 0);
     $current = (string)($_POST['current_password'] ?? '');
     $new1    = (string)($_POST['new_password'] ?? '');
     $new2    = (string)($_POST['confirm_password'] ?? '');
 
-    if ($new1 === '' || strlen($new1) < 8) {
-        $errors[] = 'A nova palavra-passe deve ter pelo menos 8 caracteres.';
-    }
-    if ($new1 !== $new2) {
-        $errors[] = 'A confirmação não coincide.';
-    }
+    if ($new1 === '' || strlen($new1) < 8) { header('Location: mudar_pass.php?err=weak'); exit(); }
+    if ($new1 !== $new2) { header('Location: mudar_pass.php?err=nomatch'); exit(); }
 
-    // Validar password atual
-    if (empty($errors)) {
-        $use_hash = has_column($conn, 'users', 'password_hash');
-        $col = $use_hash ? 'password_hash' : 'password';
-        $stmt = $conn->prepare("SELECT $col AS secret FROM users WHERE id = ? LIMIT 1");
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $row = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+    // Buscar password atual (coluna users.password)
+    $stmt = $conn->prepare('SELECT password FROM users WHERE id = ? LIMIT 1');
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $stmt->bind_result($secret);
+    if (!$stmt->fetch()) { $stmt->close(); header('Location: mudar_pass.php?err=user'); exit(); }
+    $stmt->close();
 
-        if (!$row) {
-            $errors[] = 'Utilizador não encontrado.';
-        } else {
-            $secret = (string)$row['secret'];
-            $ok = $use_hash ? password_verify($current, $secret) : hash_equals($secret, $current);
-            if (!$ok) {
-                $errors[] = 'Palavra-passe atual incorreta.';
-            }
-        }
-    }
+    if (!hash_equals((string)$secret, $current)) { header('Location: mudar_pass.php?err=pass'); exit(); }
 
-    // Atualizar password
-    if (empty($errors)) {
-        $use_hash = has_column($conn, 'users', 'password_hash');
-        if ($use_hash) {
-            $hash = password_hash($new1, PASSWORD_DEFAULT);
-            $stmt = $conn->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
-            $stmt->bind_param('si', $hash, $user_id);
-            $stmt->execute();
-            $stmt->close();
-        } else {
-            // Legado (texto simples): não recomendado, mas compatível
-            $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-            $stmt->bind_param('si', $new1, $user_id);
-            $stmt->execute();
-            $stmt->close();
-        }
-        $success = 'Palavra-passe atualizada com sucesso.';
-        header('Location: perfil.php?changed=password');
-        exit();
-    }
+    // Atualizar password (texto simples, compatível com a tua BD atual)
+    $stmt = $conn->prepare('UPDATE users SET password = ? WHERE id = ?');
+    $stmt->bind_param('si', $new1, $user_id);
+    $stmt->execute();
+    $stmt->close();
+
+    header('Location: perfil.php?changed=password');
+    exit();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
