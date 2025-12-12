@@ -14,3 +14,6 @@
    * [10; 13[ - diamond 
    * ...
 
+- corrigir a barra superior nas paginas perfil, mudar pass, mudar email e editar perfil - para aparecer a foto de perfil correta do user, a barra de pesquisa e botao de social hub
+
+
