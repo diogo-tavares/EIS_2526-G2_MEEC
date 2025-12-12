@@ -1,9 +1,3 @@
-- ao eliminar itens e coleçoes testar se as imagens estao a ser apagadas da pasta images
-
-- ao editar item se a nova imagem é guardada e a anterior é apagada na pastas images e users 
-
------------------------------------
-
 - testar o login, registo, mudar pass e mudar email para ter a certeza que não há falhas e funciona sempre
 
 - testar se o editar perfil altera a data de nascimento corretamente e guarda na db
@@ -19,3 +13,4 @@
    * [7; 10[ - gold
    * [10; 13[ - diamond 
    * ...
+
