@@ -82,11 +82,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     
   <main class="perfil-content" style="max-width:700px;">
     <h1>Alterar e-mail</h1>
-    <?php if (!empty($errors)): ?>
-      <div class="alert alert-error">
-        <?php foreach ($errors as $e): ?><p><?php echo htmlspecialchars($e); ?></p><?php endforeach; ?>
-      </div>
-    <?php endif; ?>
+    
+    <?php
+    $errors = [];
+    if (isset($_GET['err'])) {
+        switch ($_GET['err']) {
+            case 'pass':
+                $errors[] = "A palavra-passe atual está incorreta!";
+                break;
+            case 'exists':
+                $errors[] = "Este e-mail já está a ser utilizado por outro utilizador!";
+                break;
+            case 'email':
+                $errors[] = "O formato do e-mail é inválido!";
+                break;
+        }
+    }
+    ?>
+    
     <?php if (!empty($success)): ?>
       <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
     <?php endif; ?>
@@ -101,6 +114,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         <button type="submit" class="btn-primary">Confirmar</button>
         <button type="button" class="btn-primary" onclick="window.location.href='perfil.php'">Desfazer alterações e voltar atrás</button>
       </div>
+      
+      <?php if (!empty($errors)): ?>
+      <div class="alert alert-error" style="color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-top: 20px; text-align: center; margin-bottom: 30px;">
+        <?php foreach ($errors as $e): ?><p><?php echo htmlspecialchars($e); ?></p><?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+      
     </form>
   </main>
     
