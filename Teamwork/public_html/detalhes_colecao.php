@@ -88,7 +88,10 @@ $num_itens = $res_items->num_rows;
                         <?php echo htmlspecialchars($colecao['title']); ?>
                     </span>
                     <span style="float: right; font-size: 0.9em; background: white; padding: 5px 10px; border-radius: 15px; border: 1px solid #ddd;">
-                        Criado por: <strong><?php echo htmlspecialchars($colecao['owner_name']); ?></strong>
+                        Criado por: 
+                        <a href="perfil_publico.php?id=<?php echo $colecao['user_id']; ?>" style="color: #333; text-decoration: underline;">
+                            <strong><?php echo htmlspecialchars($colecao['owner_name']); ?></strong>
+                        </a>
                     </span>
                 </p>
                 <p><strong>Data de criação: </strong><?php echo date('d/m/Y', strtotime($colecao['created_date'])); ?></p>

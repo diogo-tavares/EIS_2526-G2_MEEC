@@ -94,7 +94,9 @@ $res_users = $stmt_users->get_result();
                             <div class="mini-event-card" style="position: relative; border-left: 5px solid #ffc107; display: flex; flex-direction: column; justify-content: space-between;">
                                 <div>
                                     <span style="font-size: 0.8em; background: #e9ecef; padding: 2px 8px; border-radius: 4px; float: right;">
-                                        Por: <?php echo htmlspecialchars($col['owner_name']); ?>
+                                       Por: <a href="perfil_publico.php?id=<?php echo $col['user_id']; ?>" style="text-decoration: none; color: #007bff; font-weight: bold;">
+                                             <?php echo htmlspecialchars($col['owner_name']); ?>
+                                            </a>
                                     </span>
                                     
                                     <h4>
