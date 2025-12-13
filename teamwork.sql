@@ -85,6 +85,15 @@ CREATE TABLE developers (
     photo_path VARCHAR(255) DEFAULT 'images/profile.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 8.  USERS FOLLOW
+CREATE TABLE IF NOT EXISTS user_follows (
+    follower_id INT NOT NULL,
+    followed_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (follower_id, followed_id),
+    FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (followed_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- --------------------------------------------------------------------------------------------
 
 -- DESENVOLVEDORES ----------------------------------------------------
