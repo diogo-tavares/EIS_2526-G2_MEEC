@@ -1,11 +1,17 @@
-- testar o login, registo, mudar pass e mudar email para ter a certeza que não há falhas e funciona sempre
-
-- testar se o editar perfil altera a data de nascimento corretamente e guarda na db
+- pagina de editar perfil ainda nao esta feita
 
 - testar o editar perfil, relativo à imagem de perfil: 
    * quando é adicionada uma imagem de perfil a imagem deve ser guardada na pasta images/users e guardado este caminho (images/users + nome da imagem) na db
    * caso seja adicionada uma imagem cujo nome ja existe na pasta images/users o codigo php deve adicionar uma letra ou um numero ou algo do genero para diferenciar       da existente 
    * quando o user carrega uma imagem de perfil, antes de ele confirmar as alterações deve conseguir vê-la no lugar da imagem de perfil anterior - isto está implementado no profile_update.js e deve ser mantido
+
+- na pagina de mudar email caso o user meta a pass atual errada a alteração não é feita, esta correto, mas devia sinalizar um erro ou informar o user na pagina que a alteraçao nao foi feita pq a pass atual esta mal 
+
+- na pagina de mudar a pass caso o user meta a pass atual a alteração nao é feita, esta correto, mas devia sinalizar um erro ou informar o user na pagina que a alteraçao nao foi feita pq a pass atual esta mal . Caso o user meta bem a pass atual e meta uma nova pass, mas ao confirmar a nova pass ponha uma diferente a mudança nao é feita, esta correto, mas devia tambem sinalizar um erro ou informar que nao foi feita a alteraçao pq as passes novas nao coincidem
+
+- no registo ao repetir a pass caso o user escreva mal, o registo falha, e esta correto, mas devia sinalizar um erro ou informar o user na pagina que o registo nao foi feito pq a pass atual esta mal
+
+- o registo permite que o user introduza a data de nascimento futura, isto nao pode acontecer, nesse caso a pagina deve informar o user e nao deixar avançar enquanto não corrija 
 
 - testar o ranking do user, feature adicionada recentemente - não deve ser necessário acrescentar nada na base de dados para isto, apenas uma lógica simples na pagina de perfil que vai buscar o numero de coleções do user e define o ranking atraves daí. Ideia: até pode ir buscar o número de coleções desse user com 6 ou mais itens e o número de coleções com 5 ou menos itens , e fazer uma lógica que coleções com 6 ou mais itens valem 1.5 pontos e coleções com 5 ou menos valem 1 ponto . Depois convertem os pontos em ranking , por exemplo : 
    * [0; 4[ - bronze
@@ -14,6 +20,9 @@
    * [10; 13[ - diamond 
    * ...
 
-- corrigir a barra superior nas paginas perfil, mudar pass, mudar email e editar perfil - para aparecer a foto de perfil correta do user, a barra de pesquisa e botao de social hub
+- ficheiro progress.php devia estar dentro da pasta php , uma vez que é auxiliar
+
+- ao importar coleção do social hub, data de criação é copiada ou substituida pela data atual ????? 
+
 
 

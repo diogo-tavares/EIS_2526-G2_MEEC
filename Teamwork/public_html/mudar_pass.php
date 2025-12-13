@@ -73,7 +73,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     </header>
     
     
-  <main class="perfil-content" style="max-width:600px;margin:40px auto;">
+  <main class="perfil-content" style="max-width:700px;">
     <h1>Alterar palavra-passe</h1>
     <?php if (!empty($errors)): ?>
       <div class="alert alert-error">
@@ -85,17 +85,17 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     <?php endif; ?>
     <form method="post" action="mudar_pass.php" class="auth-form">
       <label for="current_password">Palavra-passe atual</label>
-      <input type="password" id="current_password" name="current_password" required>
+      <input type="password" id="current_password" name="current_password" placeholder="Escreva a sua palavra-passe" required>
 
       <label for="new_password">Nova palavra-passe</label>
-      <input type="password" id="new_password" name="new_password" minlength="8" required>
+      <input type="password" id="new_password" name="new_password" placeholder="Escreva a nova palavra-passe" minlength="8" required>
 
       <label for="confirm_password">Confirmar nova palavra-passe</label>
-      <input type="password" id="confirm_password" name="confirm_password" minlength="8" required>
+      <input type="password" id="confirm_password" name="confirm_password" placeholder="Repita a nova palavra-passe" minlength="8" required>
 
-      <div style="margin-top:12px;">
-        <button type="submit" class="btn-primary">Guardar</button>
-        <a class="btn-secondary" href="perfil.php">Cancelar</a>
+      <div class="edit-profile-buttons" style="margin-top: 15px; justify-content: center;">
+        <button type="submit" class="btn-primary">Confirmar</button>
+        <button type="button" class="btn-primary" onclick="window.location.href='perfil.php'">Desfazer alterações e voltar atrás</button>
       </div>
     </form>
   </main>

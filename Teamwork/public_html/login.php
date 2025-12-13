@@ -24,10 +24,10 @@
         <form method="POST" action="php/login_process.php" class="auth-form">
     <input type="hidden" name="redirect" value="<?php echo isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : '/eventos.php'; ?>">
     <label for="email">E-mail</label>
-    <input id="email" name="email" type="email" required>
+    <input id="email" name="email" type="email" placeholder="Escreva o seu e-mail"required>
 
     <label for="password">Password</label>
-    <input id="password" name="password" type="password" required>
+    <input id="password" name="password" type="password" placeholder="Escreva a sua palavra-passe" required>
 
     <?php if (isset($_GET['error'])): ?>
       <div class="error">

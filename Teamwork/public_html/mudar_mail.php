@@ -80,7 +80,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     </header>
     
     
-  <main class="perfil-content" style="max-width:600px;margin:40px auto;">
+  <main class="perfil-content" style="max-width:700px;">
     <h1>Alterar e-mail</h1>
     <?php if (!empty($errors)): ?>
       <div class="alert alert-error">
@@ -92,14 +92,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     <?php endif; ?>
     <form method="post" action="mudar_mail.php" class="auth-form">
       <label for="new_email">Novo e-mail</label>
-      <input type="email" id="new_email" name="new_email" required>
+      <input type="email" id="new_email" name="new_email" placeholder="Escreva o novo e-mail" required>
 
-      <label for="current_password">Palavra-passe atual</label>
-      <input type="password" id="current_password" name="current_password" required>
+      <label for="current_password">Palavra-passe</label>
+      <input type="password" id="current_password" name="current_password" placeholder="Escreva a sua palavra-passe" required>
 
-      <div style="margin-top:12px;">
-        <button type="submit" class="btn-primary">Guardar</button>
-        <a class="btn-secondary" href="perfil.php">Cancelar</a>
+      <div class="edit-profile-buttons" style="margin-top: 15px; justify-content: center;">
+        <button type="submit" class="btn-primary">Confirmar</button>
+        <button type="button" class="btn-primary" onclick="window.location.href='perfil.php'">Desfazer alterações e voltar atrás</button>
       </div>
     </form>
   </main>

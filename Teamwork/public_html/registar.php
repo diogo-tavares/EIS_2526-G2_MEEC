@@ -32,10 +32,10 @@
         <input type="date" id="birthdate" name="birthdate">
 
         <label for="password">Palavra-passe</label>
-        <input type="password" id="password" name="password" placeholder="Escreva a sua palavra-passe" required>
+        <input type="password" id="password" name="password" placeholder="Escreva a sua palavra-passe" minlength="8" required>
 
         <label for="confirm">Repetir palavra-passe</label>
-        <input type="password" id="confirm" name="confirm" placeholder="Repita a sua palavra-passe" required>
+        <input type="password" id="confirm" name="confirm" placeholder="Repita a sua palavra-passe" minlength="8" required>
 
         <button type="submit" class="btn-primary">REGISTAR</button>
         </form>
