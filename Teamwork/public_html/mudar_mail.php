@@ -103,5 +103,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
       </div>
     </form>
   </main>
+    
+    <footer class="bottom-bar">
+        <a href="desenvolvedores.php">DESENVOLVEDORES</a>
+    </footer>
 </body>
 </html>
