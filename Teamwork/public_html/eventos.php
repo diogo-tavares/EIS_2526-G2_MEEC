@@ -75,7 +75,7 @@ $eventos_passados = array_reverse($eventos_passados);
             <h2>Meus Eventos Futuros:</h2>
             
             <?php if (empty($eventos_futuros)): ?>
-                <p>Não tens eventos futuros agendados.</p>
+                <p style="color: #666">Não tens eventos futuros agendados.</p>
             <?php else: ?>
                 <?php foreach ($eventos_futuros as $evento): ?>
                     <div class="mini-event-card">
@@ -91,7 +91,7 @@ $eventos_passados = array_reverse($eventos_passados);
             <h2 class="event-section-title">Meus Eventos Passados:</h2>
 
             <?php if (empty($eventos_passados)): ?>
-                <p>Não tens eventos passados.</p>
+                <p style="color: #666">Não tens eventos passados.</p>
             <?php else: ?>
                 <?php foreach ($eventos_passados as $evento): ?>
                     <div class="mini-event-card past-event">

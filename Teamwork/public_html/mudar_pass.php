@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
-require_once __DIR__ . '/php/db.php';
-require_once __DIR__ . '/php/auth.php';
+require_once 'php/db.php';
+require_once 'php/auth.php';
+require_once 'php/get_profile_pic.php';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $user_id = (int)($_SESSION['user_id'] ?? 0);
@@ -41,8 +42,37 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mudar palavra-passe</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/pesquisa.js" defer></script>
 </head>
 <body>
+    
+    <header class="top-bar-home">
+        <div class="logo">
+            <a href="homepage.php"><img src="images/logo.png" alt="Logo"></a>
+        </div>
+        
+        <div class="search-bar">
+    
+    <div class="search-input-wrapper">
+        <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+        <div id="search-results" class="search-results-list"></div>
+    </div>
+
+    <a href="social.php" class="social-hub-btn">
+        <span class="social-hub-icon">🌍</span>
+        <span class="social-hub-text">Social Hub</span>
+    </a>
+
+</div>
+
+        <div class="user-icon">
+            <a href="perfil.php">
+                <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
+            </a>
+        </div>
+    </header>
+    
+    
   <main class="perfil-content" style="max-width:600px;margin:40px auto;">
     <h1>Alterar palavra-passe</h1>
     <?php if (!empty($errors)): ?>

@@ -114,7 +114,7 @@ $res_events = $stmt_events->get_result();
 
                 <?php endwhile; ?>
             <?php else: ?>
-                <p>Ainda não tens coleções. <a href="add_colecao.php">Cria a tua primeira!</a></p>
+                <p style="color: #666">Ainda não tens coleções.</p>
             <?php endif; ?>
 
         </section>

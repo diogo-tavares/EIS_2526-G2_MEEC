@@ -84,7 +84,7 @@ if (!$item) {
         <?php endif; ?>
 
         <?php if (!empty($item['acquisition_date'])): ?>
-            <p><strong>Data de aquisição:</strong> <?= $item['acquisition_date'] ?></p>
+            <p><strong>Data de aquisição:</strong> <?= date('d/m/Y', strtotime($item['acquisition_date'])) ?></p>
         <?php endif; ?>
 
         <?php if (!empty($item['importance'])): ?>

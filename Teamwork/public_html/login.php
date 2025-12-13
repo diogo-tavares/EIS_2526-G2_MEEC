@@ -29,11 +29,6 @@
     <label for="password">Password</label>
     <input id="password" name="password" type="password" required>
 
-    <label class="remember">
-        <input type="checkbox" name="remember" value="1">
-        Manter sessão iniciada
-    </label>
-
     <?php if (isset($_GET['error'])): ?>
       <div class="error">
         <?php

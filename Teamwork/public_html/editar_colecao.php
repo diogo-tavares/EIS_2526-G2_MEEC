@@ -27,11 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($title) || empty($date) || empty($desc)) {
         $erro = "Por favor, preencha todos os campos obrigatórios.";
     } else {
-        // A. Atualizar dados principais na tabela 'collections'
-        // ATUALIZADO: Adicionado is_public=?
-        $stmt = $conn->prepare("UPDATE collections SET title=?, description=?, created_date=?, is_public=? WHERE id=? AND user_id=?");
-        // ATUALIZADO: Adicionado 'i' extra no meio e a variável $is_public
-        $stmt->bind_param("sssiii", $title, $desc, $date, $is_public, $col_id, $user_id);
+        $stmt = $conn->prepare("UPDATE collections SET title=?, description=?, is_public=? WHERE id=? AND user_id=?");
+        $stmt->bind_param("ssiii", $title, $desc, $is_public, $col_id, $user_id);
 
         if ($stmt->execute()) {
             
@@ -140,10 +137,6 @@ while (count($tags_atuais) < 5) {
                 <label for="collection-name"><strong>Nome:</strong></label>
                 <input type="text" id="collection-name" name="collection-name" 
                        value="<?php echo htmlspecialchars($colecao['title']); ?>" required>
-
-                <label for="collection-date"><strong>Data de criação:</strong></label>
-                <input type="date" id="collection-date" name="collection-date" 
-                       value="<?php echo date('Y-m-d', strtotime($colecao['created_date'])); ?>" required>
 
                 <label><strong>Tags (Preencha até 5, sem espaços, acentos ou cedilhas):</strong></label>
                 <div class="tags-grid">

@@ -20,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // 2. Inserir a Coleção na tabela 'collections'
         // Nota: O campo na BD chama-se 'title' e 'created_date'
-        $stmt = $conn->prepare("INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("isssi", $user_id, $title, $desc, $date, $is_public);
+        $stmt = $conn->prepare("INSERT INTO collections (user_id, title, description, created_date, is_public) VALUES (?, ?, ?, NOW(), ?)");
+        $stmt->bind_param("issi", $user_id, $title, $desc, $is_public);
 
         if ($stmt->execute()) {
             // Recuperar o ID da coleção acabada de criar
@@ -109,9 +109,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <label for="collection-name"><strong>Nome:</strong></label>
                 <input type="text" id="collection-name" name="collection-name" placeholder="Digite o nome da coleção" required>
-
-                <label for="collection-date"><strong>Data de criação:</strong></label>
-                <input type="date" id="collection-date" name="collection-date" required>
 
                 <label><strong>Tags (Preencha até 5, sem espaços, acentos ou cedilhas):</strong></label>
                 <div class="tags-grid">

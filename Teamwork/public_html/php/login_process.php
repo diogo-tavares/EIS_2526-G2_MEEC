@@ -2,10 +2,6 @@
 // php/login_process.php (compat with legacy 'password' column or modern 'password_hash')
 declare(strict_types=1);
 
-// Remember-me cookie params
-$remember = isset($_POST['remember']) && $_POST['remember'] === '1';
-$lifetime = $remember ? (60 * 60 * 24 * 30) : 0;
-
 session_set_cookie_params([
     'lifetime' => $lifetime,
     'path' => '/',
@@ -74,5 +70,5 @@ if (!empty($user['photo_path'])) {
 }
 
 // Redirect to eventos.php next to public_html
-header('Location: ../eventos.php');
+header('Location: ../homepage.php');
 exit();

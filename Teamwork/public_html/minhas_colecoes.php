@@ -86,10 +86,7 @@ $result = $stmt->get_result();
                 <?php endwhile; ?>
 
             <?php else: ?>
-                <div style="padding: 20px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
-                    <p>Ainda não tens nenhuma coleção criada.</p>
-                    <p>Clica no botão ao lado para começares!</p>
-                </div>
+                <p style="color: #666">Ainda não tens coleções.</p>
             <?php endif; ?>
 
         </section>
