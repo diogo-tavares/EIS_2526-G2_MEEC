@@ -122,10 +122,13 @@ if ($total_collections >= 1 && $total_collections <= 2) {
                     >
 
                     <?php if ($badge_class && $badge_label): ?>
-                        <div class="user-badge <?= $badge_class ?>">
-                            <?= htmlspecialchars($badge_label) ?>
-                        </div>
-                    <?php endif; ?>
+    <a href="progress.php" class="badge-link">
+        <div class="user-badge <?= $badge_class ?> clickable-badge">
+            <?= htmlspecialchars($badge_label) ?>
+        </div>
+    </a>
+<?php endif; ?>
+
                 </div>
 
                 <!-- Informações do usuário -->
