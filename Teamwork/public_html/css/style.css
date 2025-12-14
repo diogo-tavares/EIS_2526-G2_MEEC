@@ -1140,12 +1140,16 @@ body.colecao-page .sidebar .btn-primary {
 
 /* Base comum a TODOS os badges */
 .user-badge {
+    padding: 9px 21px;     
+    font-size: 17px;       
+    border-radius: 50px;
+    
     display: inline-block;
     margin-top: 10px;
-    padding: 6px 14px;
-    border-radius: 14px;
-    font-weight: bold;
+    /*padding: 6px 14px;
     font-size: 14px;
+    border-radius: 14px;*/
+    font-weight: bold;    
     text-align: center;
     transition: 
         transform 0.2s ease,
@@ -1203,4 +1207,12 @@ body.colecao-page .sidebar .btn-primary {
         0 0 8px #5efcff,
         0 0 14px rgba(94, 252, 255, 0.8),
         0 0 22px rgba(94, 252, 255, 0.6);
+}
+
+.perfil-img {
+    display: flex;           /* Ativa o modo Flexbox */
+    flex-direction: column;  /* Obriga os itens a ficarem um por cima do outro (Coluna) */
+    align-items: center;     /* Centra tudo horizontalmente */
+    justify-content: center; /* Garante alinhamento vertical se houver altura extra */
+    gap: 15px;               /* Define o espaço exato entre a imagem e o badge */
 }

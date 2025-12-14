@@ -68,7 +68,8 @@ $progress = min(100, ($total / $max) * 100);
 <head>
     <meta charset="UTF-8">
     <title>Progresso do Utilizador</title>
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/pesquisa.js" defer></script>
 
     <style>
         .progress-wrapper {
@@ -114,19 +115,24 @@ $progress = min(100, ($total / $max) * 100);
     </div>
 
     <div class="search-bar">
-        <input type="text" placeholder="Pesquisar por coleções, eventos ou tags">
-        <button>🔍</button>
+    
+    <div class="search-input-wrapper">
+        <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+        <div id="search-results" class="search-results-list"></div>
     </div>
 
+    <a href="social.php" class="social-hub-btn">
+        <span class="social-hub-icon">🌍</span>
+        <span class="social-hub-text">Social Hub</span>
+    </a>
+
+</div>
+
     <div class="user-icon">
-        <a href="perfil.php">
-            <img 
-                src="<?= htmlspecialchars($user_photo ?? 'images/profile.png') ?>" 
-                height="90"
-                style="border-radius:50%;object-fit:cover;"
-            >
-        </a>
-    </div>
+            <a href="perfil.php">
+                <img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;">
+            </a>
+        </div>
 </header>
 
 <div class="progress-wrapper">
@@ -144,7 +150,7 @@ $progress = min(100, ($total / $max) * 100);
     </h2>
 
     <p style="margin-top:15px;">
-        Coleções criadas: <strong><?= $total ?></strong>
+        Coleções: <strong><?= $total ?></strong>
     </p>
 
     <?php if ($needed > 0): ?>
