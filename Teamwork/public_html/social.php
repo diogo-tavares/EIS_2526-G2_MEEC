@@ -33,7 +33,7 @@ $stmt_evts->execute();
 $res_evts = $stmt_evts->get_result();
 
 // 3. Buscar OUTROS USERS (Para a barra lateral)
-$sql_users = "SELECT name, photo_path FROM users WHERE id != ? ORDER BY RAND()";
+$sql_users = "SELECT id, name, photo_path FROM users WHERE id != ? ORDER BY RAND()";
 $stmt_users = $conn->prepare($sql_users);
 $stmt_users->bind_param("i", $user_id);
 $stmt_users->execute();
@@ -137,9 +137,7 @@ $res_users = $stmt_users->get_result();
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
                         <?php while($evt = $res_evts->fetch_assoc()): ?>
                             <div class="mini-event-card" style="position: relative; border-left: 5px solid #007bff;">
-                                <span style="font-size: 0.8em; background: #e9ecef; padding: 2px 8px; border-radius: 4px; float: right;">
-                                    Por: <?php echo htmlspecialchars($evt['owner_name']); ?>
-                                </span>
+                                
                                 <h4><?php echo htmlspecialchars($evt['name']); ?></h4>
                                 <p>📍 <?php echo htmlspecialchars($evt['location']); ?></p>
                                 <p>📅 <?php echo date('d/m/Y', strtotime($evt['event_date'])); ?></p>
@@ -165,18 +163,23 @@ $res_users = $stmt_users->get_result();
             <?php if ($res_users->num_rows > 0): ?>
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     <?php while($u = $res_users->fetch_assoc()): ?>
-                        <?php 
-                            $u_img = !empty($u['photo_path']) ? $u['photo_path'] : 'images/profile.png';
-                        ?>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="<?php echo htmlspecialchars($u_img); ?>" 
-                                 alt="Foto" 
-                                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;">
-                            <span style="font-weight: bold; color: #333;">
-                                <?php echo htmlspecialchars($u['name']); ?>
-                            </span>
-                        </div>
-                    <?php endwhile; ?>
+    <?php 
+        // Lógica de imagem (mantendo a correção anterior se quiseres, ou o básico)
+        $u_img = !empty($u['photo_path']) ? $u['photo_path'] : 'images/profile.png';
+    ?>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="<?php echo htmlspecialchars($u_img); ?>" 
+             alt="Foto" 
+             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc; flex-shrink: 0;">
+        
+        <span style="font-weight: bold; color: #333;">
+            <a href="perfil_publico.php?id=<?php echo $u['id']; ?>" 
+               style="text-decoration: none; color: inherit;">
+                <?php echo htmlspecialchars($u['name']); ?>
+            </a>
+        </span>
+    </div>
+<?php endwhile; ?>
                 </div>
             <?php else: ?>
                 <p>És o único membro por agora!</p>

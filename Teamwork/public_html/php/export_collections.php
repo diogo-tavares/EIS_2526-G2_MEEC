@@ -5,28 +5,37 @@ require_once 'auth.php';
 
 $user_id = $_SESSION['user_id'];
 
-// Definir cabeçalhos para forçar download
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename=minhas_colecoes.csv');
 
-// Abrir output stream
 $output = fopen('php://output', 'w');
+fwrite($output, "\xEF\xBB\xBF"); // UTF-8 BOM
 
-// Para o Excel reconhecer UTF-8
-fwrite($output, "\xEF\xBB\xBF");
+// Header do CSV (Adicionei 'Tags')
+fputcsv($output, ['Titulo', 'Descricao', 'Data Criacao', 'Tags']);
 
-// Escrever cabeçalho das colunas (CSV Header)
-fputcsv($output, ['Titulo', 'Descricao', 'Data Criacao']);
-
-// Buscar dados
-$stmt = $conn->prepare("SELECT title, description, created_date FROM collections WHERE user_id = ?");
+// Buscar dados (incluindo ID para buscar as tags)
+$stmt = $conn->prepare("SELECT id, title, description, created_date FROM collections WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Escrever linhas
 while ($row = $result->fetch_assoc()) {
-    fputcsv($output, $row);
+    // Buscar tags desta coleção
+    $stmt_t = $conn->prepare("SELECT tag_name FROM collection_tags WHERE collection_id = ?");
+    $stmt_t->bind_param("i", $row['id']);
+    $stmt_t->execute();
+    $res_t = $stmt_t->get_result();
+    
+    $tags = [];
+    while($t = $res_t->fetch_assoc()) {
+        $tags[] = $t['tag_name'];
+    }
+    // Junta as tags com vírgula (ex: "carro, classico, vermelho")
+    $tags_str = implode(", ", $tags);
+
+    // Escreve no CSV (Titulo, Descricao, Data, Tags)
+    fputcsv($output, [$row['title'], $row['description'], $row['created_date'], $tags_str]);
 }
 
 fclose($output);

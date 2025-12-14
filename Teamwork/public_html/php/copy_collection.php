@@ -35,6 +35,19 @@ try {
     $stmt_insert->execute();
     $new_collection_id = $conn->insert_id;
 
+    // --- NOVO: COPIAR TAGS ---
+    $stmt_tags = $conn->prepare("SELECT tag_name FROM collection_tags WHERE collection_id = ?");
+    $stmt_tags->bind_param("i", $original_id);
+    $stmt_tags->execute();
+    $res_tags = $stmt_tags->get_result();
+
+    $stmt_add_tag = $conn->prepare("INSERT INTO collection_tags (collection_id, tag_name) VALUES (?, ?)");
+    while ($t = $res_tags->fetch_assoc()) {
+        $stmt_add_tag->bind_param("is", $new_collection_id, $t['tag_name']);
+        $stmt_add_tag->execute();
+    }
+    // -------------------------
+
     // 3. Buscar ITENS originais
     $stmt_items = $conn->prepare("SELECT name, acquisition_date, importance, price, weight, image_path FROM items WHERE collection_id = ?");
     $stmt_items->bind_param("i", $original_id);
@@ -47,27 +60,20 @@ try {
     while ($item = $res_items->fetch_assoc()) {
         
         // --- LÓGICA DE CÓPIA DE IMAGEM ---
-        $final_image_path = $item['image_path']; // Por defeito, mantém o antigo (backup)
+        $final_image_path = $item['image_path']; 
 
-        // Se existir uma imagem definida na BD
         if (!empty($item['image_path'])) {
-            // Caminho físico atual (como estamos na pasta 'php/', temos de subir um nível com '../')
             $source_file = "../" . $item['image_path'];
-            
             if (file_exists($source_file)) {
-                // Gerar novo nome único para a cópia
                 $extension = pathinfo($source_file, PATHINFO_EXTENSION);
                 $new_filename = "images/items/" . uniqid("copy_") . "_" . time() . "." . $extension;
                 $dest_file = "../" . $new_filename;
 
-                // Tentar copiar o ficheiro físico
                 if (copy($source_file, $dest_file)) {
-                    // Se a cópia funcionar, guardamos o NOVO caminho na BD
                     $final_image_path = $new_filename;
                 }
             }
         }
-        // ----------------------------------
 
         $stmt_copy_item->bind_param("issidds", 
             $new_collection_id, 
@@ -76,14 +82,12 @@ try {
             $item['importance'], 
             $item['price'], 
             $item['weight'], 
-            $final_image_path // Usa o caminho da imagem NOVA
+            $final_image_path
         );
         $stmt_copy_item->execute();
     }
 
-    // Confirmar tudo
     $conn->commit();
-    
     header("Location: ../colecao.php?id=" . $new_collection_id);
     exit();
 

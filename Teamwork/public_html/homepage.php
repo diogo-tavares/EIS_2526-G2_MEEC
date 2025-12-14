@@ -86,7 +86,7 @@ $res_feed = $stmt_feed->get_result();
     <main class="main-content">
         
         <section class="latest-collections">
-            <h2>Últimas coleções adicionadas/Novidades:</h2>
+            <h2>Últimas coleções adicionadas:</h2>
 
             <?php if ($res_cols->num_rows > 0): ?>
                 <?php while($col = $res_cols->fetch_assoc()): ?>
