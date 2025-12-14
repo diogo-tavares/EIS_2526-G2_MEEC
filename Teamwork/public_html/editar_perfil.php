@@ -42,6 +42,16 @@ if ($method === 'POST') {
       $ok = $d && $d->format('Y-m-d') === $birth;
       if (!$ok) back_here('err=birth_fmt');
 
+      // --- VALIDAÇÃO DE DATA FUTURA (NOVO) ---
+      $hoje = new DateTime();
+      $hoje->setTime(0, 0, 0);
+      $d->setTime(0, 0, 0);
+      
+      if ($d > $hoje) {
+          back_here('err=future'); // Erro se for data futura
+      }
+      // ---------------------------------------
+
       $stmt = $conn->prepare('UPDATE users SET birthdate = ? WHERE id = ?');
       $stmt->bind_param('si', $birth, $user_id);
       $stmt->execute(); $stmt->close();
@@ -134,7 +144,6 @@ if ($user_id > 0) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editar Perfil — Hub de Coleções</title>
 
-  <!-- Mantém as tuas folhas de estilo -->
   <link rel="stylesheet" href="css/style.css?v=2">
   <style>
     .hidden-element { display:none; }
@@ -142,35 +151,39 @@ if ($user_id > 0) {
   </style>
 </head>
 <body>
-  <!-- Barra superior (mantém a tua estrutura) -->
   <header class="top-bar-home">
     <div class="logo">
       <a href="homepage.php"><img src="images/logo.png" alt="Logo do Sistema"></a>
     </div>
     <div class="search-bar">
-      <input type="text" placeholder="Pesquisar...">
-      <button>🔍</button>
+    
+    <div class="search-input-wrapper">
+        <input type="text" id="live-search-input" placeholder="🔍 Pesquisar..." autocomplete="off">
+        <div id="search-results" class="search-results-list"></div>
     </div>
+
+    <a href="social.php" class="social-hub-btn">
+        <span class="social-hub-icon">🌍</span>
+        <span class="social-hub-text">Social Hub</span>
+    </a>
+
+</div>
     <div class="user-icon">
       <a href="perfil.php"><img src="<?php echo htmlspecialchars($user_photo); ?>" alt="Perfil" height="90" style="border-radius: 50%; object-fit: cover; width: 90px;"></a>
     </div>
   </header>
 
-  <!-- Conteúdo principal -->
-<main class="edit-profile-content">
+  <main class="edit-profile-content">
   <h1>Editar perfil:</h1>
 
   <section class="edit-profile-container">
-    <!-- Um ÚNICO form, mas com display:contents para não quebrar o layout -->
     <form action="editar_perfil.php" method="POST" enctype="multipart/form-data" style="display: contents;">
 
-      <!-- Coluna ESQUERDA: imagem -->
       <div class="edit-profile-img">
   <img id="profile-preview"
        src="<?php echo htmlspecialchars($photoPath, ENT_QUOTES); ?>"
-       alt="Foto de Perfil" width="180">
+       alt="Foto de Perfil" width="180" style="border-radius: 50%; object-fit: cover; height: 180px;">
 
-  <!-- Input de ficheiro: escondido fora do ecrã, mas NÃO display:none -->
   <input
     type="file"
     id="profile-upload"
@@ -178,7 +191,6 @@ if ($user_id > 0) {
     accept="image/*"
     style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;">
 
-  <!-- Label com aparência de botão, associado ao input -->
   <label for="profile-upload" class="btn-secondary" id="upload-btn" role="button" tabindex="0">
     Carregar nova imagem
   </label>
@@ -198,18 +210,22 @@ if ($user_id > 0) {
   <?php endif; ?>
 </div>
 
-      <!-- Coluna DIREITA: data -->
       <div class="edit-profile-form">
         <label for="birthdate"><strong>Nova data de nascimento:</strong></label>
+        
         <input type="date" id="birthdate" name="birthdate"
-               value="<?php echo htmlspecialchars($birthValue ?? '', ENT_QUOTES); ?>">
+               value="<?php echo htmlspecialchars($birthValue ?? '', ENT_QUOTES); ?>"
+               max="<?php echo date('Y-m-d'); ?>">
 
-        <?php if (isset($_GET['err']) && $_GET['err'] === 'birth_fmt'): ?>
-          <p class="error-msg">Formato inválido. Usa AAAA-MM-DD.</p>
+        <?php if (isset($_GET['err'])): ?>
+            <?php if ($_GET['err'] === 'birth_fmt'): ?>
+                <p class="error-msg">Formato inválido. Usa AAAA-MM-DD.</p>
+            <?php elseif ($_GET['err'] === 'future'): ?>
+                <p class="error-msg">A data de nascimento não pode ser no futuro.</p>
+            <?php endif; ?>
         <?php endif; ?>
 
         <div class="edit-profile-buttons">
-          <!-- Só grava quando clicas aqui -->
           <button type="submit" class="btn-primary" id="confirm-btn">Confirmar</button>
 
           <button type="button" class="btn-primary" id="cancel-btn"
@@ -224,45 +240,25 @@ if ($user_id > 0) {
 </main>
 
 
-  <!-- Barra inferior -->
   <footer class="bottom-bar">
-    <a href="desenvolvedores.html">DESENVOLVEDORES</a>
+    <a href="desenvolvedores.php">DESENVOLVEDORES</a>
   </footer>
 
-  <!-- JS mínimo para acionar o upload -->
+  <script src="js/pesquisa.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const uploadBtn   = document.getElementById('upload-btn');
       const uploadInput = document.getElementById('profile-upload');
-      const submitImg   = document.getElementById('submit-img');
+      const previewImg  = document.getElementById('profile-preview');
 
-      if (uploadBtn && uploadInput && submitImg) {
-        uploadBtn.addEventListener('click', () => uploadInput.click());
+      if (uploadInput && previewImg) {
         uploadInput.addEventListener('change', () => {
-          if (uploadInput.files && uploadInput.files.length > 0) {
-            submitImg.click();
-          }
+          const file = uploadInput.files && uploadInput.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = e => { previewImg.src = e.target.result; };
+          reader.readAsDataURL(file);
         });
       }
     });
   </script>
 </body>
-</html>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const uploadInput = document.getElementById('profile-upload');
-  const previewImg  = document.getElementById('profile-preview');
-
-  if (uploadInput && previewImg) {
-    uploadInput.addEventListener('change', () => {
-      const file = uploadInput.files && uploadInput.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => { previewImg.src = e.target.result; };
-      reader.readAsDataURL(file);
-    });
-  }
-});
-</script>
-

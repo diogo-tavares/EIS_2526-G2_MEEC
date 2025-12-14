@@ -116,8 +116,9 @@ if ($total_collections >= 1 && $total_collections <= 2) {
                         id="profile-img" 
                         src="<?= htmlspecialchars($user_photo ?? 'images/profile.png') ?>" 
                         alt="Foto do usuário" 
+                        width="150" 
                         height="150"
-                        style="border-radius:50%;object-fit:cover;"
+                        style="border-radius:50%; object-fit:cover;"
                     >
 
                     <?php if ($badge_class && $badge_label): ?>

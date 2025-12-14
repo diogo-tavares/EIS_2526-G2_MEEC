@@ -108,14 +108,14 @@ INSERT INTO developers (name, email, faculty, course) VALUES
 -- Pass: admin
 INSERT INTO users (email, password, name, birthdate, photo_path) 
 VALUES 
-('admin@gmail.com', '$2y$10$oyw53IARSQj9i9Yd2Yhtm.37Xk3tQ2em7EZHWyXhu/9jYNXGDRc0O', 'Administrador', '2000-01-01', 'images/users/admin.png');
+('admin@gmail.com', 'admin', 'Administrador', '2000-01-01', 'images/users/admin.png');
 
 SET @user_id = LAST_INSERT_ID();
 
 
 INSERT INTO users (email, password, name, birthdate, photo_path) 
 VALUES 
-('admin2@gmail.com', 'a', 'Administrador2', '2000-01-01', 'images/users/admin.png');
+('admin2@gmail.com', 'admin', 'Administrador2', '2000-01-01', 'images/users/admin2.png');
 
 
 SET @user_id2 = LAST_INSERT_ID();

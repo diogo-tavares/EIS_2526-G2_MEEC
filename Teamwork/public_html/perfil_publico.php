@@ -74,7 +74,7 @@ if ($my_id !== $target_user_id) {
 <main class="perfil-content">
     <div class="perfil-container" style="margin-bottom: 40px;">
         <div class="perfil-img">
-            <img src="<?php echo htmlspecialchars(!empty($target_user['photo_path']) ? $target_user['photo_path'] : 'images/profile.png'); ?>" height="150" style="border-radius:50%; object-fit:cover;">
+            <img src="<?php echo htmlspecialchars(!empty($target_user['photo_path']) ? $target_user['photo_path'] : 'images/profile.png'); ?>" height="150" width="150" style="border-radius:50%; object-fit:cover;">
         </div>
         
         <div class="perfil-info">

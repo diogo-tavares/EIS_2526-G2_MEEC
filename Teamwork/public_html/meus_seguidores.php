@@ -21,30 +21,13 @@ $stmt->bind_param("i", $my_id);
 $stmt->execute();
 $res_following = $stmt->get_result();
 $count_following = $res_following->num_rows;
-
-// --- QUERY 2: Quem me segue (Followers) ---
-// Inclui verificação se eu já sigo de volta (do_i_follow)
-$sql_followers = "
-    SELECT u.id, u.name, u.photo_path,
-           (SELECT COUNT(*) FROM collections WHERE user_id = u.id) as num_cols,
-           (SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND followed_id = u.id) as do_i_follow
-    FROM user_follows uf
-    JOIN users u ON uf.follower_id = u.id
-    WHERE uf.followed_id = ?
-    ORDER BY uf.created_at DESC";
-
-$stmt2 = $conn->prepare($sql_followers);
-$stmt2->bind_param("ii", $my_id, $my_id);
-$stmt2->execute();
-$res_followers = $stmt2->get_result();
-$count_followers = $res_followers->num_rows;
 ?>
 
 <!DOCTYPE html>
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>A Minha Rede</title>
+    <title>Quem estou a seguir</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/pesquisa.js" defer></script>
     <style>
@@ -57,9 +40,10 @@ $count_followers = $res_followers->num_rows;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            justify-content: center;
         }
         .stat-item {
-            flex: 1;
+            min-width: 150px;
             text-align: center;
         }
         .stat-number {
@@ -163,10 +147,6 @@ $count_followers = $res_followers->num_rows;
             <span class="stat-number"><?php echo $count_following; ?></span>
             <span class="stat-label">A Seguir</span>
         </div>
-        <div class="stat-item" style="border-left: 1px solid #eee;">
-            <span class="stat-number"><?php echo $count_followers; ?></span>
-            <span class="stat-label">Seguidores</span>
-        </div>
     </div>
 
     <h2 class="section-title">📤 Pessoas que segues</h2>
@@ -181,10 +161,37 @@ $count_followers = $res_followers->num_rows;
                     <p class="user-meta">📚 <?php echo $user['num_cols']; ?> Coleções</p>
                     
                     <div style="display: flex; gap: 10px; width: 100%;">
-                        <a href="perfil_publico.php?id=<?php echo $user['id']; ?>" class="btn-primary" style="flex: 1; font-size: 0.9em; padding: 8px;">Ver Perfil</a>
+                        <a href="perfil_publico.php?id=<?php echo $user['id']; ?>" 
+                           class="btn-primary" 
+                           style="flex: 1; 
+                                  height: 40px; 
+                                  box-sizing: border-box; 
+                                  border: 1px solid #007bff; 
+                                  margin: 0; 
+                                  padding: 0; 
+                                  font-size: 0.9em; 
+                                  text-decoration: none; 
+                                  display: flex; 
+                                  justify-content: center; 
+                                  align-items: center; 
+                                  border-radius: 6px;">
+                           Ver Perfil
+                        </a>
                         
-                        <button class="btn-secondary btn-unfollow" style="flex: 1; font-size: 0.9em; padding: 8px;" 
-                                onclick="toggleFollow(<?php echo $user['id']; ?>, 'unfollow')">
+                        <button class="btn-secondary btn-unfollow" 
+                                style="flex: 1; 
+                                       height: 40px; 
+                                       box-sizing: border-box; 
+                                       border: 1px solid #dc3545;
+                                       margin: 0; 
+                                       padding: 0; 
+                                       font-size: 0.9em; 
+                                       display: flex; 
+                                       justify-content: center; 
+                                       align-items: center; 
+                                       border-radius: 6px; 
+                                       cursor: pointer;" 
+                                onclick="toggleFollow(<?php echo $user['id']; ?>)">
                             Deixar
                         </button>
                     </div>
@@ -192,49 +199,14 @@ $count_followers = $res_followers->num_rows;
             <?php endwhile; ?>
         </div>
     <?php else: ?>
-        <p style="margin-bottom: 40px; color: #666;">Ainda não segues ninguém. <a href="social.php">Explora o Social Hub</a> para encontrar pessoas.</p>
-    <?php endif; ?>
-
-
-    <h2 class="section-title">📥 Pessoas que te seguem</h2>
-
-    <?php if ($count_followers > 0): ?>
-        <div class="network-grid">
-            <?php while($follower = $res_followers->fetch_assoc()): ?>
-                <div class="user-card">
-                    <img src="<?php echo htmlspecialchars(!empty($follower['photo_path']) ? $follower['photo_path'] : 'images/profile.png'); ?>">
-                    
-                    <h3><?php echo htmlspecialchars($follower['name']); ?></h3>
-                    <p class="user-meta">📚 <?php echo $follower['num_cols']; ?> Coleções</p>
-                    
-                    <div style="display: flex; gap: 10px; width: 100%;">
-                        <a href="perfil_publico.php?id=<?php echo $follower['id']; ?>" class="btn-primary" style="flex: 1; font-size: 0.9em; padding: 8px;">Ver Perfil</a>
-                        
-                        <?php if ($follower['do_i_follow']): ?>
-                            <button class="btn-secondary" disabled style="flex: 1; font-size: 0.9em; padding: 8px; background-color: #e9ecef; color: #666; cursor: default;">
-                                Segues ✔
-                            </button>
-                        <?php else: ?>
-                            <button id="btn-follow-back-<?php echo $follower['id']; ?>" 
-                                    class="btn-primary" style="flex: 1; font-size: 0.9em; padding: 8px; background-color: #28a745;"
-                                    onclick="toggleFollow(<?php echo $follower['id']; ?>, 'follow_back')">
-                                Seguir de volta
-                            </button>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endwhile; ?>
-        </div>
-    <?php else: ?>
-        <p style="color: #666;">Ainda não tens seguidores.</p>
+        <p style="margin-bottom: 40px; color: #666;">Ainda não segues ninguém. Explora o Social Hub para encontrar pessoas.</p>
     <?php endif; ?>
 
 </main>
 
 <script>
-function toggleFollow(userId, type) {
-    // Confirmar se for para deixar de seguir
-    if (type === 'unfollow' && !confirm("Tens a certeza que queres deixar de seguir este utilizador?")) {
+function toggleFollow(userId) {
+    if (!confirm("Tens a certeza que queres deixar de seguir este utilizador?")) {
         return;
     }
 
@@ -246,32 +218,14 @@ function toggleFollow(userId, type) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            if (type === 'unfollow') {
-                // Remover o cartão visualmente
-                const card = document.getElementById('card-user-' + userId);
-                if (card) {
-                    card.style.opacity = '0.5';
-                    card.innerHTML = '<p style="padding: 20px; color: #dc3545;">Deixaste de seguir.</p>';
-                    setTimeout(() => card.remove(), 1000);
-                    
-                    // Atualizar contador
-                    const stat = document.querySelector('.stat-number');
-                    if(stat) stat.innerText = parseInt(stat.innerText) - 1;
-                }
-            } else if (type === 'follow_back') {
-                // Alterar botão para "Segues ✔"
-                const btn = document.getElementById('btn-follow-back-' + userId);
-                if (btn) {
-                    btn.innerText = "Segues ✔";
-                    btn.disabled = true;
-                    btn.style.backgroundColor = "#e9ecef";
-                    btn.style.color = "#666";
-                    btn.style.cursor = "default";
-                    
-                    // Atualizar contador de "A Seguir"
-                    const stat = document.querySelector('.stat-number');
-                    if(stat) stat.innerText = parseInt(stat.innerText) + 1;
-                }
+            const card = document.getElementById('card-user-' + userId);
+            if (card) {
+                card.style.opacity = '0.5';
+                card.innerHTML = '<p style="padding: 20px; color: #dc3545;">Deixaste de seguir.</p>';
+                setTimeout(() => card.remove(), 1000);
+                
+                const stat = document.querySelector('.stat-number');
+                if(stat) stat.innerText = parseInt(stat.innerText) - 1;
             }
         } else {
             alert("Erro: " + data.message);

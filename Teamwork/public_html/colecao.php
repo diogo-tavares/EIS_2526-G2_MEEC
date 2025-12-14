@@ -130,11 +130,17 @@ $events_past = $stmt_past->get_result();
                     <?php if ($res_items->num_rows > 0): ?>
                         <?php while($item = $res_items->fetch_assoc()): ?>
                             <?php if (!empty($item['image_path'])): ?>
-                                <a href="item.php?id=<?php echo $item['id']; ?>">
-                                    <img src="<?php echo htmlspecialchars($item['image_path']); ?>" 
-                                         alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                                         title="<?php echo htmlspecialchars($item['name']); ?>">
-                                </a>
+                                <div style="text-align: center;">
+                                    <a href="item.php?id=<?php echo $item['id']; ?>" style="text-decoration: none; color: inherit;">
+                                        <img src="<?php echo htmlspecialchars($item['image_path']); ?>" 
+                                             alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                             title="<?php echo htmlspecialchars($item['name']); ?>">
+                                        
+                                        <p style="margin-top: 5px; font-size: 0.9em; font-weight: bold; color: #333;">
+                                            <?php echo htmlspecialchars($item['name']); ?>
+                                        </p>
+                                    </a>
+                                </div>
                             <?php endif; ?>
                         <?php endwhile; ?>
                     <?php else: ?>
